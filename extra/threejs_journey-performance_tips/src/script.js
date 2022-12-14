@@ -1,6 +1,15 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import Stats from 'stats.js';
+
+/**
+ * Stats
+ */
+const stats = new Stats();
+// FPS
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
 
 /**
  * Base
@@ -127,6 +136,9 @@ scene.add(directionalLight);
 const clock = new THREE.Clock();
 
 const tick = () => {
+  // Update Stats
+  stats.begin();
+
   const elapsedTime = clock.getElapsedTime();
 
   // Update test mesh
@@ -140,6 +152,8 @@ const tick = () => {
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick);
+
+  stats.end();
 };
 
 tick();
