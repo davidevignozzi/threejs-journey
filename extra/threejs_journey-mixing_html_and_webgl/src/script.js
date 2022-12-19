@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { gsap } from 'gsap';
+import { Vector3 } from 'three';
 
 /**
  * Loaders
@@ -128,6 +129,17 @@ gltfLoader.load(
 );
 
 /**
+ * Points of interest
+ */
+const points = [
+  {
+    position: new THREE.Vector3(1.55, 0.3, -0.6),
+    element: document.querySelector('.point-0'),
+  },
+];
+// console.log('🚀 ~ file: script.js:140 ~ points', points);
+
+/**
  * Lights
  */
 const directionalLight = new THREE.DirectionalLight('#ffffff', 3);
@@ -199,6 +211,19 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const tick = () => {
   // Update controls
   controls.update();
+
+  // Go through each point
+  for (const point of points) {
+    const screenPosition = point.position.clone();
+    screenPosition.project(camera);
+
+    // console.log('x => ', screenPosition.x);
+    // console.log('y => ', screenPosition.y);
+
+    const translateX = screenPosition.x * sizes.width * 0.5;
+    const translateY = -screenPosition.y * sizes.height * 0.5;
+    point.element.style.transform = `translate(${translateX}px, ${translateY}px)`;
+  }
 
   // Render
   renderer.render(scene, camera);
