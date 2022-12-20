@@ -11,9 +11,29 @@ import React from 'react';
 const Experience = () => {
     return (
         <>
-            <mesh>
-                <torusKnotGeometry />
-                <meshNormalMaterial />
+            <mesh
+                // scale={[3, 2, 1]}> => [x,y,z]
+                scale={1.5}
+                // position={[x,y,z]}
+                position-x={2}
+                // rotation={[x,y,z]}
+                rotation-y={Math.PI * 0.25}>
+                {/* <torusKnotGeometry />
+                <meshNormalMaterial /> */}
+                <sphereGeometry
+                    args={[
+                        // radious
+                        1.5,
+                        // widthSegments
+                        32,
+                        // heigthSegments
+                        32
+                    ]}
+                />
+
+                {/* <meshBasicMaterial args={[{ color: 'red', wireframe: true }]} /> */}
+
+                <meshBasicMaterial color={'red'} wireframe />
             </mesh>
         </>
     );
