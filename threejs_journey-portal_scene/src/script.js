@@ -6,6 +6,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import firefliesVertexShader from './shaders/fireflies/vertex.glsl';
 import firefliesFragmentShader from './shaders/fireflies/fragment.glsl';
+import portalVertexShader from './shaders/portal/vertex.glsl';
+import portalFragmentShader from './shaders/portal/fragment.glsl';
 
 // /**
 //  * Spector JS
@@ -59,8 +61,12 @@ const bakedMaterial = new THREE.MeshBasicMaterial({
 });
 
 // Portal light material
-const portalLightMaterial = new THREE.MeshBasicMaterial({
-  color: 0xffffff,
+// const portalLightMaterial = new THREE.MeshBasicMaterial({
+//   color: 0xffffff,
+// });
+const portalLightMaterial = new THREE.ShaderMaterial({
+  vertexShader: portalVertexShader,
+  fragmentShader: portalFragmentShader,
 });
 
 // Pole light material
