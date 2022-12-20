@@ -9,6 +9,10 @@ import React from 'react';
 // Don't have to provide mesh
 
 const Experience = () => {
+    return <></>;
+};
+
+const oldStff = () => {
     return (
         <>
             <mesh
