@@ -24,6 +24,7 @@ const debugObject = {};
 const gui = new dat.GUI({
   width: 400,
 });
+gui.close();
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
