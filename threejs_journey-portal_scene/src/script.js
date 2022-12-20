@@ -65,6 +65,9 @@ const bakedMaterial = new THREE.MeshBasicMaterial({
 //   color: 0xffffff,
 // });
 const portalLightMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: { value: 0 },
+  },
   vertexShader: portalVertexShader,
   fragmentShader: portalFragmentShader,
 });
@@ -233,6 +236,7 @@ const tick = () => {
 
   //Update materials
   firefliesMaterial.uniforms.uTime.value = elapsedTime;
+  portalLightMaterial.uniforms.uTime.value = elapsedTime;
 
   // Update controls
   controls.update();
