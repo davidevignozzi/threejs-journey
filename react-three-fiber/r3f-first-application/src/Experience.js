@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
 
 // Don't have to create a Scene
 // Don't have to create a WebGLRenderer
@@ -9,6 +10,16 @@ import React from 'react';
 // Don't have to provide mesh
 
 const Experience = () => {
+    // Refs
+    const cubeRef = useRef();
+
+    // On each frame
+    useFrame((state, delta) => {
+        // Animate cube
+        // cubeRef.current.rotation.y -= 0.01; => Different Fps? problem
+        cubeRef.current.rotation.y -= delta;
+    });
+
     return (
         <>
             {/* Sphere */}
@@ -18,7 +29,7 @@ const Experience = () => {
             </mesh>
 
             {/* Cube */}
-            <mesh rotation-y={Math.PI * 0.25} position-x={2} scale={1.5}>
+            <mesh ref={cubeRef} rotation-y={Math.PI * 0.25} position-x={2} scale={1.5}>
                 <boxGeometry scale={1.5} />
                 <meshBasicMaterial color="mediumpurple"></meshBasicMaterial>
             </mesh>
