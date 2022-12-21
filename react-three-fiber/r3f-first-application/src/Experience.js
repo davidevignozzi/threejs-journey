@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { extend, useThree, useFrame } from '@react-three/fiber';
+import CustomObject from './CustomObject';
 
 // Don't have to create a Scene
 // Don't have to create a WebGLRenderer
@@ -73,6 +74,8 @@ const Experience = () => {
                 <planeGeometry />
                 <meshStandardMaterial color="greenyellow"></meshStandardMaterial>
             </mesh>
+
+            <CustomObject />
         </>
     );
 };
