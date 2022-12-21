@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { extend, useThree, useFrame } from '@react-three/fiber';
 
 // Don't have to create a Scene
 // Don't have to create a WebGLRenderer
@@ -9,7 +10,22 @@ import { useFrame } from '@react-three/fiber';
 // Don't have to provide specific value for <torusKnotGeometry />
 // Don't have to provide mesh
 
+// extend() => will try to automatically convert a Three.js class
+// into a declarative version and make it available in JSX.
+extend({
+    // OrbitControls: OrbitControls
+    OrbitControls
+});
+
 const Experience = () => {
+    // three contains everything we need like:
+    // three.camera: the PerspectiveCamera
+    // three.gl: the WebGLRenderer that contains a domElement, in other words, the <canvas>
+    // three.clock: An instance of the Clock
+    // Etc.
+    // const three = useThree();
+    const { camera, gl } = useThree();
+
     // Refs
     const cubeRef = useRef();
     const groupRef = useRef();
@@ -24,11 +40,16 @@ const Experience = () => {
         cubeRef.current.rotation.y -= delta;
 
         // Update group
-        groupRef.current.rotation.y += delta;
+        // groupRef.current.rotation.y += delta;
     });
 
     return (
         <>
+            {/* Orbit Controls
+                // We need to provide camera
+            */}
+            <orbitControls args={[camera, gl.domElement]} />
+
             <group ref={groupRef}>
                 {/* Sphere */}
                 <mesh position-x={-2}>
