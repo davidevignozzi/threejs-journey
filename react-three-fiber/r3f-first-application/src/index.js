@@ -21,9 +21,10 @@ root.render(
         // flat // To delete the default tonemapping
         gl={{
             // antialias: false
-            antialias: true
-            // toneMapping: ACESFilmicToneMapping // default tone mapping
+            antialias: true,
+            toneMapping: THREE.ACESFilmicToneMapping, // default tone mapping
             // toneMapping: THREE.CineonToneMapping
+            outputEncoding: THREE.LinearEncoding
         }}
         camera={
             {
