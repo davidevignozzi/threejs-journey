@@ -40,10 +40,10 @@ const Experience = () => {
         // console.log(state.camera);
         // console.log(state.clock);
         // console.log(state.clock.getElapsedTime);
-        const angle = state.clock.elapsedTime * 0.5;
-        state.camera.position.x = Math.sin(angle) * 8;
-        state.camera.position.z = Math.cos(angle) * 8;
-        state.camera.lookAt(0, 0, 0);
+        // const angle = state.clock.elapsedTime * 0.5;
+        // state.camera.position.x = Math.sin(angle) * 8;
+        // state.camera.position.z = Math.cos(angle) * 8;
+        // state.camera.lookAt(0, 0, 0);
 
         // Update cube;
         // cubeRef.current.rotation.y -= 0.01; => Different Fps? problem
@@ -59,7 +59,7 @@ const Experience = () => {
                 // We need to provide camera
             */}
 
-            {/* <orbitControls args={[camera, gl.domElement]} /> */}
+            <orbitControls args={[camera, gl.domElement]} />
 
             {/* Lights */}
             <directionalLight position={[1, 2, 3]} intensity={1.5} />
