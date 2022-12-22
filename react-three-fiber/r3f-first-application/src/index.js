@@ -19,6 +19,9 @@ root.render(
     <Canvas
         // orthographic
         // flat // To delete the default tonemapping
+
+        // Pixel ratio
+        // dpr={[1, 2]} // default
         gl={{
             // antialias: false
             antialias: true,
