@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber';
-import { useHelper, OrbitControls } from '@react-three/drei';
+import { BakeShadows, useHelper, OrbitControls } from '@react-three/drei';
 import { useRef } from 'react';
 import { Perf } from 'r3f-perf';
 import * as THREE from 'three';
@@ -22,6 +22,9 @@ export default function Experience() {
 
     return (
         <>
+            {/* Bake Shadows */}
+            <BakeShadows />
+
             {/* Background with R3F */}
             <color args={['ivory']} attach="background" />
 
