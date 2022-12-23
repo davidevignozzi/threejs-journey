@@ -61,14 +61,17 @@ export default function Experience() {
         <>
             <Environment
                 background
-                files={[
-                    './environmentMaps/2/px.jpg',
-                    './environmentMaps/2/nx.jpg',
-                    './environmentMaps/2/py.jpg',
-                    './environmentMaps/2/ny.jpg',
-                    './environmentMaps/2/pz.jpg',
-                    './environmentMaps/2/nz.jpg'
-                ]}
+                files={
+                    './environmentMaps/the_sky_is_on_fire_2k.hdr'
+                    // [
+                    //     './environmentMaps/2/px.jpg',
+                    //     './environmentMaps/2/nx.jpg',
+                    //     './environmentMaps/2/py.jpg',
+                    //     './environmentMaps/2/ny.jpg',
+                    //     './environmentMaps/2/pz.jpg',
+                    //     './environmentMaps/2/nz.jpg'
+                    // ]
+                }
             />
             {/* Bake Shadows */}
             {/* <BakeShadows /> */}
