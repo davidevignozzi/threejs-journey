@@ -61,18 +61,25 @@ export default function Experience() {
         <>
             <Environment
                 background
-                files={
-                    './environmentMaps/the_sky_is_on_fire_2k.hdr'
-                    // [
-                    //     './environmentMaps/2/px.jpg',
-                    //     './environmentMaps/2/nx.jpg',
-                    //     './environmentMaps/2/py.jpg',
-                    //     './environmentMaps/2/ny.jpg',
-                    //     './environmentMaps/2/pz.jpg',
-                    //     './environmentMaps/2/nz.jpg'
-                    // ]
-                }
-            />
+                preset="sunset"
+                // files={
+                //     './environmentMaps/the_sky_is_on_fire_2k.hdr'
+                //     // [
+                //     //     './environmentMaps/2/px.jpg',
+                //     //     './environmentMaps/2/nx.jpg',
+                //     //     './environmentMaps/2/py.jpg',
+                //     //     './environmentMaps/2/ny.jpg',
+                //     //     './environmentMaps/2/pz.jpg',
+                //     //     './environmentMaps/2/nz.jpg'
+                //     // ]
+                // }
+            >
+                <mesh position-z={-5} scale={10}>
+                    <planeGeometry />
+                    <meshBasicMaterial color="red" />
+                </mesh>
+            </Environment>
+
             {/* Bake Shadows */}
             {/* <BakeShadows /> */}
 
