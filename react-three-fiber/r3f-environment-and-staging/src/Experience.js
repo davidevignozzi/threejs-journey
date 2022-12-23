@@ -30,11 +30,11 @@ export default function Experience() {
     // 1th parameter is the ref
     // 2nd parameter is the helper class from THREE
     // 3rd parameter is the size of the helper
-    // useHelper(directionalLightRef, THREE.DirectionalLightHelper, 1); // removed because is drwan by AccumulativeShadow
+    useHelper(directionalLightRef, THREE.DirectionalLightHelper, 1); // removed because is drwan by AccumulativeShadow
 
     useFrame((state, delta) => {
-        const time = state.clock.elapsedTime;
-        cube.current.position.x = 2 * Math.sin(time);
+        // const time = state.clock.elapsedTime;
+        // cube.current.position.x = 2 * Math.sin(time);
         cube.current.rotation.y += delta * 0.2;
     });
 
@@ -52,10 +52,9 @@ export default function Experience() {
 
             {/* 
                 Lights
-                
             */}
             {/* // frames.value = number of renders on first frame => bad for performances */}
-            <AccumulativeShadows
+            {/* <AccumulativeShadows
                 position={[0, -0.99, 0]}
                 scale={10}
                 color="#316d39"
@@ -71,14 +70,14 @@ export default function Experience() {
                     position={[1, 2, 3]}
                     bias={0.001}
                 />
-                {/* 
+                /* 
                     // castShadow
                     // mapSize={}
                     // size={}
                     // near={}
                     // far={}
-                */}
-            </AccumulativeShadows>
+                
+            </AccumulativeShadows> */}
 
             {/* 
                 🎗{
