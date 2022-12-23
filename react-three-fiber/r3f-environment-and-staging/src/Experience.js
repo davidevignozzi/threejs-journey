@@ -1,5 +1,6 @@
 import { useFrame } from '@react-three/fiber';
 import {
+    Stage,
     Lightformer,
     Environment,
     Sky,
@@ -66,7 +67,7 @@ export default function Experience() {
 
     return (
         <>
-            <Environment
+            {/* <Environment
                 // background
                 preset="sunset"
                 ground={{
@@ -86,20 +87,20 @@ export default function Experience() {
                 //     //     './environmentMaps/2/nz.jpg'
                 //     // ]
                 // }
-            >
-                {/* <color args={['#000000']} attach="background" />
+            > */}
+            {/* <color args={['#000000']} attach="background" />
                 <Lightformer position-z={-5} scale={10} color="red" intensity={10} form="ring" /> */}
-                {/* <mesh position-z={-5} scale={10}>
+            {/* <mesh position-z={-5} scale={10}>
                     <planeGeometry />
                     <meshBasicMaterial color={[10, 0, 0]} />
                 </mesh> */}
-            </Environment>
+            {/* </Environment> */}
 
             {/* Bake Shadows */}
             {/* <BakeShadows /> */}
 
             {/* Background with R3F */}
-            <color args={['ivory']} attach="background" />
+            {/* <color args={['ivory']} attach="background" /> */}
 
             <Perf position="top-left" />
 
@@ -142,7 +143,7 @@ export default function Experience() {
                 }
             */}
 
-            <ContactShadows
+            {/* <ContactShadows
                 position={[0, 0, 0]}
                 scale={10}
                 resolution={512}
@@ -151,7 +152,7 @@ export default function Experience() {
                 opacity={opacity}
                 blur={blur}
                 frames={1} // if the scene is static bake
-            />
+            /> */}
 
             {/* <directionalLight
                 ref={directionalLightRef}
@@ -170,15 +171,15 @@ export default function Experience() {
 
             {/* <Sky sunPosition={sunPosition} /> */}
 
-            <mesh castShadow position-y={1} position-x={-2}>
+            {/* <mesh castShadow position-y={1} position-x={-2}>
                 <sphereGeometry />
                 <meshStandardMaterial color="orange" envMapIntensity={envMapIntensity} />
-            </mesh>
+            </mesh> */}
 
-            <mesh ref={cube} position-y={1} castShadow position-x={2} scale={1.5}>
+            {/* <mesh ref={cube} position-y={1} castShadow position-x={2} scale={1.5}>
                 <boxGeometry />
                 <meshStandardMaterial color="mediumpurple" envMapIntensity={envMapIntensity} />
-            </mesh>
+            </mesh> */}
 
             {/* <mesh
                 // receiveShadow removed for AccumulativeShadows
@@ -188,6 +189,22 @@ export default function Experience() {
                 <planeGeometry />
                 <meshStandardMaterial color="greenyellow" envMapIntensity={envMapIntensity} />
             </mesh> */}
+
+            <Stage
+                contactShadow={{ opacity: 0.2, blur: 3 }}
+                environment="sunset"
+                preset="portrait"
+                intensity={2}>
+                <mesh castShadow position-y={1} position-x={-2}>
+                    <sphereGeometry />
+                    <meshStandardMaterial color="orange" envMapIntensity={envMapIntensity} />
+                </mesh>
+
+                <mesh ref={cube} position-y={1} castShadow position-x={2} scale={1.5}>
+                    <boxGeometry />
+                    <meshStandardMaterial color="mediumpurple" envMapIntensity={envMapIntensity} />
+                </mesh>
+            </Stage>
         </>
     );
 }
