@@ -1,8 +1,17 @@
 import { useFrame } from '@react-three/fiber';
-import { BakeShadows, useHelper, OrbitControls } from '@react-three/drei';
+import { softShadows, BakeShadows, useHelper, OrbitControls } from '@react-three/drei';
 import { useRef } from 'react';
 import { Perf } from 'r3f-perf';
 import * as THREE from 'three';
+
+/**
+ * Soft Shadows
+ */
+// The default shadows are too sharp. There are multiple ways of softening them and we are going to discover one technique called Percent Closer Soft Shadows (PCSS).
+
+// The idea is to make the shadow look blurry by picking the shadow map texture at an offset position according to the distance between the surface casting the shadow and the surface receiving the shadow, which is kind of how it happens in real life.
+
+softShadows({ frustum: 3.75, size: 0.005, near: 9.5, samples: 17, rings: 11 });
 
 export default function Experience() {
     const cube = useRef();
