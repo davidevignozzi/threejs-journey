@@ -1,5 +1,6 @@
 import { useFrame } from '@react-three/fiber';
 import {
+    Lightformer,
     Environment,
     Sky,
     ContactShadows,
@@ -62,6 +63,7 @@ export default function Experience() {
             <Environment
                 background
                 // preset="sunset"
+                resolution={32}
                 // files={
                 //     './environmentMaps/the_sky_is_on_fire_2k.hdr'
                 //     // [
@@ -75,10 +77,11 @@ export default function Experience() {
                 // }
             >
                 <color args={['#000000']} attach="background" />
-                <mesh position-z={-5} scale={10}>
+                <Lightformer position-z={-5} scale={10} color="red" intensity={10} form="ring" />
+                {/* <mesh position-z={-5} scale={10}>
                     <planeGeometry />
                     <meshBasicMaterial color={[10, 0, 0]} />
-                </mesh>
+                </mesh> */}
             </Environment>
 
             {/* Bake Shadows */}
