@@ -1,5 +1,6 @@
 import { useFrame } from '@react-three/fiber';
 import {
+    Sky,
     ContactShadows,
     RandomizedLight,
     AccumulativeShadows,
@@ -45,6 +46,10 @@ export default function Experience() {
         color: '#1d8f75',
         opacity: { value: 0.4, min: 0, max: 1 },
         blur: { value: 2.8, min: 0, max: 10 }
+    });
+
+    const { sunPosition } = useControls('sky', {
+        sunPosition: { value: [1, 2, 3] }
     });
 
     return (
@@ -117,10 +122,12 @@ export default function Experience() {
                 shadow-camera-right={5}
                 shadow-camera-bottom={-5}
                 shadow-camera-left={-5}
-                position={[1, 2, 3]}
+                position={sunPosition}
                 intensity={1.5}
             />
             <ambientLight intensity={0.5} />
+
+            <Sky sunPosition={sunPosition} />
 
             <mesh castShadow position-x={-2}>
                 <sphereGeometry />
