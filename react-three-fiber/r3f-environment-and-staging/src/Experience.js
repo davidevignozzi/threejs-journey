@@ -34,10 +34,24 @@ export default function Experience() {
 
             {/* 
                 Lights
+
+                🎗{
+                    Each light casting shadows will render
+                    the scene in a specific way and output that
+                    we call “shadow map”.
+                } 
+
             */}
             <directionalLight
                 ref={directionalLightRef}
                 castShadow
+                shadow-mapSize={[1024, 1024]} // directionalLight.shadow.mapSize.set(1024, 1024)
+                shadow-camera-near={1}
+                shadow-camera-far={10}
+                shadow-camera-top={5}
+                shadow-camera-right={5}
+                shadow-camera-bottom={-5}
+                shadow-camera-left={-5}
                 position={[1, 2, 3]}
                 intensity={1.5}
             />
