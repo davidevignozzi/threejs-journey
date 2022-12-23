@@ -45,7 +45,7 @@ export default function Experience() {
 
     // Debug UI
     const { color, opacity, blur } = useControls('contact shadow', {
-        color: '#1d8f75',
+        color: '#4b2709',
         opacity: { value: 0.4, min: 0, max: 1 },
         blur: { value: 2.8, min: 0, max: 10 }
     });
@@ -54,16 +54,27 @@ export default function Experience() {
         sunPosition: { value: [1, 2, 3] }
     });
 
-    const { envMapIntensity } = useControls('environment map', {
-        envMapIntensity: { value: 3.5, min: 0, max: 12 }
-    });
+    const { envMapIntensity, envMapHeight, envMapRadius, envMapScale } = useControls(
+        'environment map',
+        {
+            envMapIntensity: { value: 3.5, min: 0, max: 12 },
+            envMapHeight: { value: 7, min: 0, max: 100 },
+            envMapRadius: { value: 28, min: 10, max: 1000 },
+            envMapScale: { value: 100, min: 10, max: 1000 }
+        }
+    );
 
     return (
         <>
             <Environment
-                background
-                // preset="sunset"
-                resolution={32}
+                // background
+                preset="sunset"
+                ground={{
+                    height: envMapHeight,
+                    radius: envMapRadius,
+                    scale: envMapScale
+                }}
+                // resolution={32}
                 // files={
                 //     './environmentMaps/the_sky_is_on_fire_2k.hdr'
                 //     // [
@@ -76,8 +87,8 @@ export default function Experience() {
                 //     // ]
                 // }
             >
-                <color args={['#000000']} attach="background" />
-                <Lightformer position-z={-5} scale={10} color="red" intensity={10} form="ring" />
+                {/* <color args={['#000000']} attach="background" />
+                <Lightformer position-z={-5} scale={10} color="red" intensity={10} form="ring" /> */}
                 {/* <mesh position-z={-5} scale={10}>
                     <planeGeometry />
                     <meshBasicMaterial color={[10, 0, 0]} />
@@ -132,7 +143,7 @@ export default function Experience() {
             */}
 
             <ContactShadows
-                position={[0, -0.99, 0]}
+                position={[0, 0, 0]}
                 scale={10}
                 resolution={512}
                 far={5}
@@ -159,24 +170,24 @@ export default function Experience() {
 
             {/* <Sky sunPosition={sunPosition} /> */}
 
-            <mesh castShadow position-x={-2}>
+            <mesh castShadow position-y={1} position-x={-2}>
                 <sphereGeometry />
                 <meshStandardMaterial color="orange" envMapIntensity={envMapIntensity} />
             </mesh>
 
-            <mesh ref={cube} castShadow position-x={2} scale={1.5}>
+            <mesh ref={cube} position-y={1} castShadow position-x={2} scale={1.5}>
                 <boxGeometry />
                 <meshStandardMaterial color="mediumpurple" envMapIntensity={envMapIntensity} />
             </mesh>
 
-            <mesh
+            {/* <mesh
                 // receiveShadow removed for AccumulativeShadows
                 position-y={-1}
                 rotation-x={-Math.PI * 0.5}
                 scale={10}>
                 <planeGeometry />
                 <meshStandardMaterial color="greenyellow" envMapIntensity={envMapIntensity} />
-            </mesh>
+            </mesh> */}
         </>
     );
 }
