@@ -1,5 +1,6 @@
 import { useFrame } from '@react-three/fiber';
 import {
+    Environment,
     Sky,
     ContactShadows,
     RandomizedLight,
@@ -52,10 +53,25 @@ export default function Experience() {
         sunPosition: { value: [1, 2, 3] }
     });
 
+    const { envMapIntensity } = useControls('environment map', {
+        envMapIntensity: { value: 3.5, min: 0, max: 12 }
+    });
+
     return (
         <>
+            <Environment
+                background
+                files={[
+                    './environmentMaps/2/px.jpg',
+                    './environmentMaps/2/nx.jpg',
+                    './environmentMaps/2/py.jpg',
+                    './environmentMaps/2/ny.jpg',
+                    './environmentMaps/2/pz.jpg',
+                    './environmentMaps/2/nz.jpg'
+                ]}
+            />
             {/* Bake Shadows */}
-            <BakeShadows />
+            {/* <BakeShadows /> */}
 
             {/* Background with R3F */}
             <color args={['ivory']} attach="background" />
@@ -112,7 +128,7 @@ export default function Experience() {
                 frames={1} // if the scene is static bake
             />
 
-            <directionalLight
+            {/* <directionalLight
                 ref={directionalLightRef}
                 castShadow
                 shadow-mapSize={[1024, 1024]} // directionalLight.shadow.mapSize.set(1024, 1024)
@@ -124,19 +140,19 @@ export default function Experience() {
                 shadow-camera-left={-5}
                 position={sunPosition}
                 intensity={1.5}
-            />
-            <ambientLight intensity={0.5} />
+            /> */}
+            {/* <ambientLight intensity={0.5} /> */}
 
-            <Sky sunPosition={sunPosition} />
+            {/* <Sky sunPosition={sunPosition} /> */}
 
             <mesh castShadow position-x={-2}>
                 <sphereGeometry />
-                <meshStandardMaterial color="orange" />
+                <meshStandardMaterial color="orange" envMapIntensity={envMapIntensity} />
             </mesh>
 
             <mesh ref={cube} castShadow position-x={2} scale={1.5}>
                 <boxGeometry />
-                <meshStandardMaterial color="mediumpurple" />
+                <meshStandardMaterial color="mediumpurple" envMapIntensity={envMapIntensity} />
             </mesh>
 
             <mesh
@@ -145,7 +161,7 @@ export default function Experience() {
                 rotation-x={-Math.PI * 0.5}
                 scale={10}>
                 <planeGeometry />
-                <meshStandardMaterial color="greenyellow" />
+                <meshStandardMaterial color="greenyellow" envMapIntensity={envMapIntensity} />
             </mesh>
         </>
     );
