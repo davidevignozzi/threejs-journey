@@ -61,7 +61,7 @@ export default function Experience() {
         <>
             <Environment
                 background
-                preset="sunset"
+                // preset="sunset"
                 // files={
                 //     './environmentMaps/the_sky_is_on_fire_2k.hdr'
                 //     // [
@@ -74,9 +74,10 @@ export default function Experience() {
                 //     // ]
                 // }
             >
+                <color args={['#000000']} attach="background" />
                 <mesh position-z={-5} scale={10}>
                     <planeGeometry />
-                    <meshBasicMaterial color="red" />
+                    <meshBasicMaterial color={[10, 0, 0]} />
                 </mesh>
             </Environment>
 
