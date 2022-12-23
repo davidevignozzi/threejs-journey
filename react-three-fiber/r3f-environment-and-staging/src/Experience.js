@@ -12,6 +12,9 @@ export default function Experience() {
 
     return (
         <>
+            {/* Background with R3F */}
+            <color args={['#ff0000']} attach="background" />
+
             <Perf position="top-left" />
 
             <OrbitControls makeDefault />
