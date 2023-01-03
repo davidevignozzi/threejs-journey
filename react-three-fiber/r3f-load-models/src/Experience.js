@@ -8,7 +8,14 @@ export default function Experience() {
     // const model = useLoader(GLTFLoader, './hamburger.glb');
     // console.log('🚀 ~ model', model);
 
-    const model = useLoader(GLTFLoader, './hamburger-draco.glb', (loader) => {
+    // const model = useLoader(GLTFLoader, './hamburger-draco.glb', (loader) => {
+    //     // console.log(loader);
+    //     const dracoLoader = new DRACOLoader();
+    //     dracoLoader.setDecoderPath('./draco/');
+    //     loader.setDRACOLoader(dracoLoader);
+    // });
+
+    const model = useLoader(GLTFLoader, './FlightHelmet/glTF/FlightHelmet.gltf', (loader) => {
         // console.log(loader);
         const dracoLoader = new DRACOLoader();
         dracoLoader.setDecoderPath('./draco/');
@@ -30,7 +37,7 @@ export default function Experience() {
             </mesh>
 
             {/* Load Moadel */}
-            <primitive object={model.scene} scale={0.35} />
+            <primitive object={model.scene} scale={5} position-y={-1} />
         </>
     );
 }
