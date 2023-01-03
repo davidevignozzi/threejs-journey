@@ -1,8 +1,7 @@
 import { OrbitControls } from '@react-three/drei';
 import { Perf } from 'r3f-perf';
-import { useLoader } from '@react-three/fiber';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { Suspense } from 'react';
+import Model from './Model';
 
 export default function Experience() {
     // const model = useLoader(GLTFLoader, './hamburger.glb');
@@ -15,12 +14,12 @@ export default function Experience() {
     //     loader.setDRACOLoader(dracoLoader);
     // });
 
-    const model = useLoader(GLTFLoader, './FlightHelmet/glTF/FlightHelmet.gltf', (loader) => {
-        // console.log(loader);
-        const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('./draco/');
-        loader.setDRACOLoader(dracoLoader);
-    });
+    // const model = useLoader(GLTFLoader, './FlightHelmet/glTF/FlightHelmet.gltf', (loader) => {
+    //     // console.log(loader);
+    //     const dracoLoader = new DRACOLoader();
+    //     dracoLoader.setDecoderPath('./draco/');
+    //     loader.setDRACOLoader(dracoLoader);
+    // });
 
     return (
         <>
@@ -37,7 +36,15 @@ export default function Experience() {
             </mesh>
 
             {/* Load Moadel */}
-            <primitive object={model.scene} scale={5} position-y={-1} />
+
+            {/* 
+                <primitive object={model.scene} scale={5} position-y={-1} />
+            */}
+
+            {/* Lazy Loading */}
+            <Suspense>
+                <Model />
+            </Suspense>
         </>
     );
 }
