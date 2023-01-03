@@ -43,7 +43,7 @@ export default function Experience() {
             */}
 
             {/* Lazy Loading */}
-            <Suspense fallback={<Placeholder />}>
+            <Suspense fallback={<Placeholder position-y={0.5} scale={[2, 3, 2]} />}>
                 <Model />
             </Suspense>
         </>
