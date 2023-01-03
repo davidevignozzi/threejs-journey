@@ -11,6 +11,11 @@ const Fox = () => {
     useEffect(() => {
         const action = animations.actions.Run;
         action.play();
+
+        window.setTimeout(() => {
+            animations.actions.Walk.play();
+            animations.actions.Walk.crossFadeFrom(action, 1);
+        }, 2000);
     }, []);
 
     return (
