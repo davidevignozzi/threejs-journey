@@ -19,7 +19,8 @@ const Model = () => {
     //     loader.setDRACOLoader(dracoLoader);
     // });
 
-    const model = useGLTF('./hamburger.glb');
+    // const model = useGLTF('./hamburger.glb');
+    const model = useGLTF('./hamburger-draco.glb');
 
     return <primitive object={model.scene} scale={0.3} position-y={-1} />;
 };
