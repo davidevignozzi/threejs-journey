@@ -14,7 +14,8 @@ export default function Experience() {
     // const [torusGeometry, setTorusGeometry] = useState();
     // const [material, setMaterial] = useState();
 
-    const donutsGroup = useRef();
+    // const donutsGroup = useRef();
+    const donuts = useRef([]);
 
     const [matcapTexture] = useMatcapTexture('7B5254_E9DCC7_B19986_C8AC91', 256);
 
@@ -33,7 +34,7 @@ export default function Experience() {
     }, []);
 
     useFrame((state, delta) => {
-        for (const donut of donutsGroup.current.children) {
+        for (const donut of donuts.current) {
             donut.rotation.y += delta * 0.2;
         }
     });
@@ -64,22 +65,28 @@ export default function Experience() {
                 </Text3D>
             </Center>
 
-            <group ref={donutsGroup}>
-                {[...Array(100)].map((value, index) => (
-                    <mesh
-                        key={index}
-                        geometry={torusGeometry}
-                        material={material}
-                        position={[
-                            (Math.random() - 0.5) * 10,
-                            (Math.random() - 0.5) * 10,
-                            (Math.random() - 0.5) * 10
-                        ]}
-                        scale={0.2 + Math.random() * 0.2}
-                        rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}
-                    />
-                ))}
-            </group>
+            {/* <group ref={donutsGroup}> */}
+
+            {[...Array(100)].map((value, index) => (
+                <mesh
+                    key={index}
+                    // ☝ React will call the function and send the actual component as parameter
+                    ref={(el) => {
+                        donuts.current[index] = el;
+                    }}
+                    geometry={torusGeometry}
+                    material={material}
+                    position={[
+                        (Math.random() - 0.5) * 10,
+                        (Math.random() - 0.5) * 10,
+                        (Math.random() - 0.5) * 10
+                    ]}
+                    scale={0.2 + Math.random() * 0.2}
+                    rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}
+                />
+            ))}
+
+            {/* </group> */}
         </>
     );
 }
