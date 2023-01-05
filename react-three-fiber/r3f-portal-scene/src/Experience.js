@@ -1,16 +1,22 @@
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, useGLTF } from '@react-three/drei';
 
 export default function Experience() {
+    /**
+     * Portal model
+     */
+    // const model = useGLTF('./model/portal.glb');
+    // console.log('🚀 ~ Experience ~ model', model);
+
+    const { nodes } = useGLTF('./model/portal.glb');
+    console.log('🚀 ~ Experience ~ nodes', nodes);
+
     return (
         <>
             <color args={['#201919']} attach="background" />
 
             <OrbitControls makeDefault />
 
-            <mesh scale={1.5}>
-                <boxGeometry />
-                <meshNormalMaterial />
-            </mesh>
+            <mesh geometry={nodes.baked.geometry} />
         </>
     );
 }
