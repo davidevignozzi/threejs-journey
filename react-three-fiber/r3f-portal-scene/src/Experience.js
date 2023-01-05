@@ -1,9 +1,33 @@
+import { useRef } from 'react';
 import * as THREE from 'three';
-import { Center, OrbitControls, useGLTF, useTexture, Sparkles } from '@react-three/drei';
+import { extend } from '@react-three/fiber';
+import {
+    Center,
+    OrbitControls,
+    useGLTF,
+    useTexture,
+    Sparkles,
+    shaderMaterial
+} from '@react-three/drei';
 import portalVertexShader from './shaders/portal/vertex.js';
 import portalFragmentShader from './shaders/portal/fragment.js';
 
+const PortalMaterial = shaderMaterial(
+    {
+        uTime: 0,
+        uColorStart: new THREE.Color('#ffffff'),
+        uColorEnd: new THREE.Color('#000000')
+    },
+    portalVertexShader,
+    portalFragmentShader
+);
+
+// extend({ PortalMaterial: PortalMaterial });
+extend({ PortalMaterial });
+
 export default function Experience() {
+    const portalMaterial = useRef();
+
     /**
      * Portal model
      */
@@ -44,15 +68,18 @@ export default function Experience() {
                     position={nodes.portalLight.position}
                     rotation={nodes.portalLight.rotation}
                 >
-                    <shaderMaterial
-                        vertexShader={portalVertexShader}
-                        fragmentShader={portalFragmentShader}
-                        uniforms={{
-                            uTime: { value: 0 },
-                            uColorStart: { value: new THREE.Color('#ffffff') },
-                            uColorEnd: { value: new THREE.Color('#000000') }
-                        }}
-                    />
+                    {/*
+                        <shaderMaterial
+                            vertexShader={portalVertexShader}
+                            fragmentShader={portalFragmentShader}
+                            uniforms={{
+                                uTime: { value: 0 },
+                                uColorStart: { value: new THREE.Color('#ffffff') },
+                                uColorEnd: { value: new THREE.Color('#000000') }
+                            }}
+                        />
+                    */}
+                    <portalMaterial ref={portalMaterial} />
                 </mesh>
 
                 {/* Sparkles */}
