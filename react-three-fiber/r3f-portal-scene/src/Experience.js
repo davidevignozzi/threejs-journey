@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import * as THREE from 'three';
-import { extend } from '@react-three/fiber';
+import { extend, useFrame } from '@react-three/fiber';
 import {
     Center,
     OrbitControls,
@@ -40,6 +40,10 @@ export default function Experience() {
     const bakedTexture = useTexture('./model/baked.jpg');
     bakedTexture.flipY = false;
     // console.log('🚀 ~ Experience ~ bakedTexture', bakedTexture);
+
+    useFrame((state, delta) => {
+        portalMaterial.current.uTime += delta;
+    });
 
     return (
         <>
