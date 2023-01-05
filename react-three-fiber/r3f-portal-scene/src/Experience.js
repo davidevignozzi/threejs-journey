@@ -1,4 +1,4 @@
-import { OrbitControls, useGLTF, useTexture } from '@react-three/drei';
+import { Center, OrbitControls, useGLTF, useTexture } from '@react-three/drei';
 
 export default function Experience() {
     /**
@@ -20,9 +20,19 @@ export default function Experience() {
 
             <OrbitControls makeDefault />
 
-            <mesh geometry={nodes.baked.geometry}>
-                <meshBasicMaterial map={bakedTexture} />
-            </mesh>
+            <Center>
+                <mesh geometry={nodes.baked.geometry}>
+                    <meshBasicMaterial map={bakedTexture} />
+                </mesh>
+
+                <mesh geometry={nodes.poleLightA.geometry} position={nodes.poleLightA.position}>
+                    <meshBasicMaterial color="fffe5" />
+                </mesh>
+
+                <mesh geometry={nodes.poleLightB.geometry} position={nodes.poleLightB.position}>
+                    <meshBasicMaterial color="fffe5" />
+                </mesh>
+            </Center>
         </>
     );
 }
