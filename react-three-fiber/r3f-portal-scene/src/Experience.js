@@ -35,7 +35,7 @@ export default function Experience() {
                     <meshBasicMaterial color="fffe5" />
                 </mesh>
 
-                {/*  */}
+                {/* portalLight */}
                 <mesh
                     geometry={nodes.portalLight.geometry}
                     position={nodes.portalLight.position}
