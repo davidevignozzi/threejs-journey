@@ -1,10 +1,10 @@
-import { PresentationControls, Environment, Float } from '@react-three/drei';
+import { PresentationControls, Environment, Float, ContactShadows } from '@react-three/drei';
 import Laptop from './Laptop';
 
 export default function Experience() {
     return (
         <>
-            <color args={['#333333']} attach="background" />
+            <color args={['#ffffff']} attach="background" />
 
             <Environment preset="city" />
 
@@ -20,6 +20,8 @@ export default function Experience() {
                     <Laptop position-y={-1.2} />
                 </Float>
             </PresentationControls>
+
+            <ContactShadows position-y={-1.4} opacity={0.4} scale={5} blur={2.4} />
         </>
     );
 }
