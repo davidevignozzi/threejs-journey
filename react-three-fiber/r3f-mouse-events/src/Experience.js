@@ -45,7 +45,20 @@ export default function Experience() {
                 <meshStandardMaterial color="orange" />
             </mesh>
 
-            <mesh ref={cube} position-x={2} scale={1.5} onClick={eventHandler}>
+            <mesh
+                ref={cube}
+                position-x={2}
+                scale={1.5}
+                // onContextMenu={eventHandler}
+                // onDoubleClick={eventHandler}
+                // onPointerUp={eventHandler}
+                // onPointerDown={eventHandler}
+                // onPointerEnter={eventHandler}
+                // onPointerOver={eventHandler}
+                // onPointerOut={eventHandler}
+                // onPointerDown={eventHandler}
+                // onPointerMissed={eventHandler}
+            >
                 <boxGeometry />
                 <meshStandardMaterial color="mediumpurple" />
             </mesh>
