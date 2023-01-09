@@ -5,9 +5,28 @@ import { useRef } from 'react';
 export default function Experience() {
     const cube = useRef();
 
-    const eventHandler = () => {
+    const eventHandler = (event) => {
         // console.log('click');
         cube.current.material.color.set(`hsl(${Math.random() * 360}, 100%,75%)`);
+
+        /* 
+            // Events
+            console.log('---');
+            console.log('distance', event.distance); // Distance between camera and hit point
+            console.log('point', event.point); // Hit point coordinates (in 3D)
+            console.log('uv', event.uv); // UV coordinates on the geometry (in 2D)
+            console.log('object', event.object); // The object that triggered the event
+            console.log('eventObject', event.eventObject); // The object that was listening to the event (useful where there is objects in objects)
+
+            console.log('---');
+            console.log('x', event.x); // 2D screen coordinates of the pointer
+            console.log('y', event.y); // 2D screen coordinates of the pointer
+
+            console.log('---');
+            console.log('shiftKey', event.shiftKey); // If the SHIFT key was pressed
+            console.log('ctrlKey', event.ctrlKey); // If the CTRL key was pressed
+            console.log('metaKey', event.metaKey); // If the COMMAND key was pressed
+        */
     };
 
     useFrame((state, delta) => {
