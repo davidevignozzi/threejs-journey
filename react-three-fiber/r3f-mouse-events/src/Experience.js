@@ -40,7 +40,12 @@ export default function Experience() {
             <directionalLight position={[1, 2, 3]} intensity={1.5} />
             <ambientLight intensity={0.5} />
 
-            <mesh position-x={-2}>
+            <mesh
+                position-x={-2}
+                onClick={(event) => {
+                    event.stopPropagation();
+                }}
+            >
                 <sphereGeometry />
                 <meshStandardMaterial color="orange" />
             </mesh>
@@ -49,6 +54,7 @@ export default function Experience() {
                 ref={cube}
                 position-x={2}
                 scale={1.5}
+                onClick={eventHandler}
                 // onContextMenu={eventHandler}
                 // onDoubleClick={eventHandler}
                 // onPointerUp={eventHandler}
