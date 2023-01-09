@@ -36,11 +36,11 @@ export default function Experience() {
                         intensity={65}
                         color={'#faa582'}
                         rotation={[0.1, Math.PI, 0]}
-                        position={[0, 0.55, -1.15]}
+                        position={[0.75, 0.55, -1.15]}
                     />
 
                     {/* Laptop */}
-                    <primitive object={laptop.scene} position-y={-1.2}>
+                    <primitive object={laptop.scene} position-x={0.75} position-y={-1.2}>
                         {/* Image with the actual website */}
                         <Html
                             transform
@@ -52,16 +52,19 @@ export default function Experience() {
                             <img src={image} />
                         </Html>
                     </primitive>
-                    <Text
-                        font="./bangers-v20-latin-regular.woff"
-                        fontSize={1}
-                        position={[2, 0.75, 0.75]}
-                        rotation-y={-1.25}
-                        maxWidth={2}
-                        textAlign="center"
-                    >
-                        DAVIDE VIGNOZZI
-                    </Text>
+
+                    {/* 
+                        <Text
+                            font="./bangers-v20-latin-regular.woff"
+                            fontSize={1}
+                            position={[2, 0.75, 0.75]}
+                            rotation-y={-1.25}
+                            maxWidth={2}
+                            textAlign="center"
+                        >
+                            DAVIDE VIGNOZZI
+                        </Text> 
+                    */}
                 </Float>
             </PresentationControls>
 
