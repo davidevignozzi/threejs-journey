@@ -4,6 +4,7 @@ import {
     Environment,
     Float,
     Html,
+    Text,
     ContactShadows
 } from '@react-three/drei';
 import image from './Images/ComingSoon.png';
@@ -51,6 +52,16 @@ export default function Experience() {
                             <img src={image} />
                         </Html>
                     </primitive>
+                    <Text
+                        font="./bangers-v20-latin-regular.woff"
+                        fontSize={1}
+                        position={[2, 0.75, 0.75]}
+                        rotation-y={-1.25}
+                        maxWidth={2}
+                        textAlign="center"
+                    >
+                        DAVIDE VIGNOZZI
+                    </Text>
                 </Float>
             </PresentationControls>
 
