@@ -28,9 +28,19 @@ export default function Experience() {
                 snap={{ mass: 2, tension: 400 }}
             >
                 <Float rotationIntensity={0.4}>
+                    {/* Screen Light */}
+                    <rectAreaLight
+                        width={2.5}
+                        height={1.65}
+                        intensity={65}
+                        color={'#FFD7C6'}
+                        rotation={[0.1, Math.PI, 0]}
+                        position={[0, 0.55, -1.15]}
+                    />
+
                     {/* Laptop */}
                     <primitive object={laptop.scene} position-y={-1.2}>
-                        {/* iFrame with the actual image */}
+                        {/* Image with the actual website */}
                         <Html
                             transform
                             wrapperClass="htmlScreen"
