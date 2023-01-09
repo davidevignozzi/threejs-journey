@@ -1,4 +1,4 @@
-import { OrbitControls, Environment } from '@react-three/drei';
+import { OrbitControls, Environment, Float } from '@react-three/drei';
 import Laptop from './Laptop';
 
 export default function Experience() {
@@ -9,7 +9,9 @@ export default function Experience() {
             <Environment preset="city" />
             <OrbitControls makeDefault />
 
-            <Laptop />
+            <Float rotationIntensity={0.4}>
+                <Laptop position-y={-1.2} />
+            </Float>
         </>
     );
 }
