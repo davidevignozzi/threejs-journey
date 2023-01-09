@@ -55,6 +55,12 @@ export default function Experience() {
                 position-x={2}
                 scale={1.5}
                 onClick={eventHandler}
+                onPointerEnter={() => {
+                    document.body.style.cursor = 'pointer';
+                }}
+                onPointerLeave={() => {
+                    document.body.style.cursor = 'default';
+                }}
                 // onContextMenu={eventHandler}
                 // onDoubleClick={eventHandler}
                 // onPointerUp={eventHandler}
