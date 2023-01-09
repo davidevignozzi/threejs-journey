@@ -6,6 +6,7 @@ import {
     Html,
     ContactShadows
 } from '@react-three/drei';
+import image from './Images/ComingSoon.png';
 
 export default function Experience() {
     const laptop = useGLTF(
@@ -27,7 +28,19 @@ export default function Experience() {
                 snap={{ mass: 2, tension: 400 }}
             >
                 <Float rotationIntensity={0.4}>
-                    <primitive object={laptop.scene} position-y={-1.2} />
+                    {/* Laptop */}
+                    <primitive object={laptop.scene} position-y={-1.2}>
+                        {/* iFrame with the actual image */}
+                        <Html
+                            transform
+                            wrapperClass="htmlScreen"
+                            distanceFactor={1.17}
+                            position={[0, 1.56, -1.4]}
+                            rotation-x={-0.256}
+                        >
+                            <img src={image} />
+                        </Html>
+                    </primitive>
                 </Float>
             </PresentationControls>
 
