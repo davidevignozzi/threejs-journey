@@ -52,12 +52,14 @@ export default function Experience() {
                     position={[1.5, 2, 0]}
                     gravityScale={1}
                     restitution={0}
-                    friction={0}
+                    friction={0.7}
+                    colliders={false}
                 >
                     <mesh castShadow onClick={cubeJump}>
                         <boxGeometry />
                         <meshStandardMaterial color="mediumpurple" />
                     </mesh>
+                    <CuboidCollider mass={2} args={[0.5, 0.5, 0.5]} />
                 </RigidBody>
 
                 {/* Floor */}
