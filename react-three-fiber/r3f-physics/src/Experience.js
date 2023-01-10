@@ -8,7 +8,11 @@ export default function Experience() {
 
     const cubeJump = () => {
         // console.log(cube.current);
-        cube.current.applyImpulse({ x: 0, y: 5, z: 0 });
+
+        const mass = cube.current.mass();
+        // console.log('🚀 ~ cubeJump ~ mass', mass);
+
+        cube.current.applyImpulse({ x: 0, y: 5 * mass, z: 0 });
         cube.current.applyTorqueImpulse({
             x: Math.random() - 0.5,
             y: Math.random() - 0.5,
