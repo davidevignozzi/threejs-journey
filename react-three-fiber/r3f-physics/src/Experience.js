@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
@@ -8,7 +8,8 @@ import {
     CuboidCollider,
     BallCollider,
     Debug,
-    CylinderCollider
+    CylinderCollider,
+    InstancedRigidBodies
 } from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
 
@@ -20,20 +21,39 @@ export default function Experience() {
 
     const hamburger = useGLTF('./hamburger.glb');
 
-    const cubesCount = 3;
+    const cubesCount = 100;
     const cubes = useRef();
 
-    useEffect(() => {
+    const cubeTransforms = useMemo(() => {
+        const positions = [];
+        const rotations = [];
+        const scales = [];
+
         for (let i = 0; i < cubesCount; i++) {
-            const matrix = new THREE.Matrix4();
-            matrix.compose(
-                new THREE.Vector3(i * 2, 0, 0),
-                new THREE.Quaternion(),
-                new THREE.Vector3(1, 1, 1)
-            );
-            cubes.current.setMatrixAt(i, matrix);
+            positions.push([(Math.random() - 0.5) * 8, 6 + i * 0.2, (Math.random() - 0.5) * 8]);
+
+            rotations.push([Math.random(), Math.random(), Math.random()]);
+
+            const scale = 0.2 + Math.random() * 0.8;
+            scales.push([scale, scale, scale]);
         }
+
+        return { positions, rotations, scales };
     }, []);
+    // console.log('🚀 ~ cubeTransforms ~ cubeTransforms', cubeTransforms);
+
+    // Doesn't work with <InstancedRigidBodies>
+    // useEffect(() => {
+    //     for (let i = 0; i < cubesCount; i++) {
+    //         const matrix = new THREE.Matrix4();
+    //         matrix.compose(
+    //             new THREE.Vector3(i * 2, 0, 0),
+    //             new THREE.Quaternion(),
+    //             new THREE.Vector3(1, 1, 1)
+    //         );
+    //         cubes.current.setMatrixAt(i, matrix);
+    //     }
+    // }, []);
 
     const cubeJump = () => {
         // console.log(cube.current);
@@ -168,10 +188,16 @@ export default function Experience() {
                     <CuboidCollider args={[0.5, 2, 5]} position={[-5.5, 1, 0]} />
                 </RigidBody>
 
-                <instancedMesh ref={cubes} castShadow args={[null, null, cubesCount]}>
-                    <boxGeometry />
-                    <meshStandardMaterial color="tomato" />
-                </instancedMesh>
+                <InstancedRigidBodies
+                    positions={cubeTransforms.positions}
+                    rotations={cubeTransforms.rotations}
+                    scales={cubeTransforms.scales}
+                >
+                    <instancedMesh ref={cubes} castShadow args={[null, null, cubesCount]}>
+                        <boxGeometry />
+                        <meshStandardMaterial color="tomato" />
+                    </instancedMesh>
+                </InstancedRigidBodies>
             </Physics>
         </>
     );
