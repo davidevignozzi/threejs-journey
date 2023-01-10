@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import * as THREE from 'three';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { Physics, RigidBody, CuboidCollider, BallCollider, Debug } from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
@@ -10,6 +10,8 @@ export default function Experience() {
 
     const cube = useRef();
     const twister = useRef();
+
+    const hamburger = useGLTF('./hamburger.glb');
 
     const cubeJump = () => {
         // console.log(cube.current);
@@ -97,8 +99,8 @@ export default function Experience() {
                     colliders={false}
                     onCollisionEnter={collisionEnter}
                     // onCollisionExit={() => console.log('exit')}
-                    onSleep={() => console.log('sleep')}
-                    onWake={() => console.log('wake')}
+                    // onSleep={() => console.log('sleep')}
+                    // onWake={() => console.log('wake')}
                 >
                     <mesh castShadow onClick={cubeJump}>
                         <boxGeometry />
@@ -130,6 +132,10 @@ export default function Experience() {
                         <boxGeometry />
                         <meshStandardMaterial color="red" />
                     </mesh>
+                </RigidBody>
+
+                <RigidBody position={(0, 4, 0)}>
+                    <primitive object={hamburger.scene} scale={0.25} />
                 </RigidBody>
             </Physics>
         </>
