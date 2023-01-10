@@ -16,18 +16,25 @@ export default function Experience() {
                 <Debug />
 
                 {/* Sphere */}
-                <RigidBody>
+                <RigidBody colliders="ball">
                     <mesh castShadow position={[-2, 2, 0]}>
                         <sphereGeometry />
                         <meshStandardMaterial color="orange" />
                     </mesh>
                 </RigidBody>
 
-                {/* Cube */}
-                <mesh castShadow position={[2, 2, 0]}>
-                    <boxGeometry />
-                    <meshStandardMaterial color="mediumpurple" />
-                </mesh>
+                {/* Cubes */}
+                <RigidBody>
+                    <mesh castShadow position={[2, 2, 0]}>
+                        <boxGeometry args={[3, 2, 1]} />
+                        <meshStandardMaterial color="mediumpurple" />
+                    </mesh>
+
+                    <mesh castShadow position={[2, 2, 3]}>
+                        <boxGeometry args={[1, 1, 1]} />
+                        <meshStandardMaterial color="mediumpurple" />
+                    </mesh>
+                </RigidBody>
 
                 {/* Floor */}
                 <RigidBody type="fixed">
