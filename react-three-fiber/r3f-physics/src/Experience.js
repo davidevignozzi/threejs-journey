@@ -21,7 +21,7 @@ export default function Experience() {
 
     const hamburger = useGLTF('./hamburger.glb');
 
-    const cubesCount = 100;
+    const cubesCount = 250;
     const cubes = useRef();
 
     const cubeTransforms = useMemo(() => {
@@ -110,7 +110,7 @@ export default function Experience() {
             <ambientLight intensity={0.5} />
 
             <Physics gravity={[0, -9.08, 0]}>
-                <Debug />
+                {/* <Debug /> */}
 
                 {/* Sphere */}
                 <RigidBody colliders="ball">
