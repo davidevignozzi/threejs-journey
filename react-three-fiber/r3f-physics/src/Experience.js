@@ -1,10 +1,13 @@
 import { useRef } from 'react';
+import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
 import { Physics, RigidBody, CuboidCollider, BallCollider, Debug } from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
 
 export default function Experience() {
     const cube = useRef();
+    const twister = useRef();
 
     const cubeJump = () => {
         // console.log(cube.current);
@@ -19,6 +22,31 @@ export default function Experience() {
             z: Math.random() - 0.5
         });
     };
+
+    useFrame((state) => {
+        const time = state.clock.getElapsedTime();
+        // console.log('🚀 ~ useFrame ~ getElapsedTime', time);
+
+        // Unfortunately, there is a small issue. setNextKinematicRotation is expecting a Quaternion and not a Euler. Quaternions are harder to express and we can’t just write one directly.
+
+        //To solve this, we are going to create a Three.js Euler, then create a Three.js Quaternion out of this Euler and since most mathematics objects are inter-compatible between Three.js and Rapier, we are going to send that Quaternion to setNextKinematicRotation.
+
+        // create Euler
+        const eulerRotation = new THREE.Euler(0, time, 0);
+
+        // convert Euler in Quaternion for R3F
+        const quaternionRotation = new THREE.Quaternion();
+        quaternionRotation.setFromEuler(eulerRotation);
+
+        // apply rotation
+        twister.current.setNextKinematicRotation(quaternionRotation);
+
+        const angle = time * 0.5;
+        const x = Math.cos(angle) * 2;
+        const z = Math.sin(angle) * 2;
+        twister.current.setNextKinematicTranslation({ x: x, y: -0.8, z: z });
+    });
+
     return (
         <>
             <Perf position="top-left" />
@@ -75,6 +103,19 @@ export default function Experience() {
                     <mesh receiveShadow position-y={-1.25}>
                         <boxGeometry args={[10, 0.5, 10]} />
                         <meshStandardMaterial color="greenyellow" />
+                    </mesh>
+                </RigidBody>
+
+                {/* Long Box */}
+                <RigidBody
+                    ref={twister}
+                    position={[0, -0.8, 0]}
+                    friction={0}
+                    type="kinematicPosition"
+                >
+                    <mesh castShadow scale={[0.4, 0.4, 3]}>
+                        <boxGeometry />
+                        <meshStandardMaterial color="red" />
                     </mesh>
                 </RigidBody>
             </Physics>
