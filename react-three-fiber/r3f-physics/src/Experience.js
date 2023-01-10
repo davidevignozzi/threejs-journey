@@ -2,7 +2,14 @@ import { useState, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { Physics, RigidBody, CuboidCollider, BallCollider, Debug } from '@react-three/rapier';
+import {
+    Physics,
+    RigidBody,
+    CuboidCollider,
+    BallCollider,
+    Debug,
+    CylinderCollider
+} from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
 
 export default function Experience() {
@@ -134,8 +141,9 @@ export default function Experience() {
                     </mesh>
                 </RigidBody>
 
-                <RigidBody position={(0, 4, 0)}>
+                <RigidBody colliders={false} position={(0, 4, 0)}>
                     <primitive object={hamburger.scene} scale={0.25} />
+                    <CylinderCollider args={[0.5, 1.25]} />
                 </RigidBody>
             </Physics>
         </>
