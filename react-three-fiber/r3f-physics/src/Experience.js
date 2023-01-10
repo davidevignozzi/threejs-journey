@@ -24,8 +24,8 @@ export default function Experience() {
                 </RigidBody>
 
                 {/* Donut */}
-                <RigidBody colliders="hull">
-                    <mesh castShadow position={[0, 1, 0]} rotation={[Math.PI * 0.1, 0, 0]}>
+                <RigidBody colliders="trimesh">
+                    <mesh castShadow position={[0, 1, 0]} rotation={[Math.PI * 0.5, 0, 0]}>
                         <torusGeometry args={[1, 0.5, 16, 42]} />
                         <meshStandardMaterial color="midiumpurple" />
                     </mesh>
