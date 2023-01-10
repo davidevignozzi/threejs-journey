@@ -8,6 +8,7 @@ import {
     ContactShadows
 } from '@react-three/drei';
 import { Suspense } from 'react';
+import { isMobile } from 'react-device-detect';
 import image from './Images/ComingSoon.png';
 
 export default function Experience() {
@@ -35,7 +36,7 @@ export default function Experience() {
                         <rectAreaLight
                             width={2.5}
                             height={1.65}
-                            intensity={65}
+                            intensity={isMobile ? 10 : 65}
                             color={'#faa582'}
                             rotation={[0.1, Math.PI, 0]}
                             position={[0.75, 0.55, -1.15]}
@@ -44,17 +45,18 @@ export default function Experience() {
                         {/* Laptop */}
                         <primitive
                             object={laptop.scene}
-                            // scale={0.8}
-                            position-x={0.75}
-                            position-y={-1.2}
+                            scale={isMobile ? 0.6 : 1}
+                            position-x={isMobile ? 0.3 : 0.75}
+                            position-y={isMobile ? -1 : -1.2}
                         >
                             {/* Image with the actual website */}
                             <Html
                                 transform
                                 wrapperClass="htmlScreen"
-                                distanceFactor={1.17}
-                                position={[0, 1.56, -1.4]}
-                                rotation-x={-0.256}
+                                distanceFactor={isMobile ? 1.15 : 1.17}
+                                position={isMobile ? [-0.04, 1.87, -1.37] : [0, 1.56, -1.4]}
+                                rotation-x={isMobile ? -0.258 : -0.256}
+                                scale={isMobile && 0.99}
                             >
                                 <img src={image} />
                             </Html>
