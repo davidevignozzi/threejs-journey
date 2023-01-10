@@ -1,4 +1,5 @@
 import { OrbitControls } from '@react-three/drei';
+import { Physics } from '@react-three/rapier';
 import { Perf } from 'r3f-perf';
 
 export default function Experience() {
