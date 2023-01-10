@@ -96,6 +96,7 @@ export default function Experience() {
                     friction={0.7}
                     colliders={false}
                     onCollisionEnter={collisionEnter}
+                    onCollisionExit={() => console.log('exit')}
                 >
                     <mesh castShadow onClick={cubeJump}>
                         <boxGeometry />
