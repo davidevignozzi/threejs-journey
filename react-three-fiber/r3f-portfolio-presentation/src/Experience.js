@@ -42,7 +42,12 @@ export default function Experience() {
                         />
 
                         {/* Laptop */}
-                        <primitive object={laptop.scene} position-x={0.75} position-y={-1.2}>
+                        <primitive
+                            object={laptop.scene}
+                            // scale={0.8}
+                            position-x={0.75}
+                            position-y={-1.2}
+                        >
                             {/* Image with the actual website */}
                             <Html
                                 transform
@@ -55,18 +60,19 @@ export default function Experience() {
                             </Html>
                         </primitive>
 
-                        {/* 
-                        <Text
-                            font="./bangers-v20-latin-regular.woff"
-                            fontSize={1}
-                            position={[2, 0.75, 0.75]}
-                            rotation-y={-1.25}
-                            maxWidth={2}
-                            textAlign="center"
-                        >
-                            DAVIDE VIGNOZZI
-                        </Text> 
-                    */}
+                        {/*
+                            // Text 
+                            <Text
+                                font="./bangers-v20-latin-regular.woff"
+                                fontSize={1}
+                                position={[2, 0.75, 0.75]}
+                                rotation-y={-1.25}
+                                maxWidth={2}
+                                textAlign="center"
+                            >
+                                DAVIDE VIGNOZZI
+                            </Text> 
+                        */}
                     </Float>
                 </PresentationControls>
             </Suspense>
