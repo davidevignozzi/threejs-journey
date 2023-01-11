@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { RigidBody } from '@react-three/rapier';
@@ -14,6 +14,7 @@ const floor2Material = new THREE.MeshStandardMaterial({ color: 'greenyellow' });
 const obstacleMaterial = new THREE.MeshStandardMaterial({ color: 'orangered' });
 const wallMaterial = new THREE.MeshStandardMaterial({ color: 'slategrey' });
 
+// First Block
 const BlockStart = ({ position = [0, 0, 0] }) => {
     return (
         <group position={position}>
@@ -28,15 +29,17 @@ const BlockStart = ({ position = [0, 0, 0] }) => {
     );
 };
 
+// Block with spinner
 const BlockSpinner = ({ position = [0, 0, 0] }) => {
     const obstacle = useRef();
+    const [speed] = useState(() => Math.random() + 0.2);
 
     // spinner animation
     useFrame((state) => {
         const time = state.clock.getElapsedTime();
         // console.log('🚀 ~ useFrame ~ time', time);
         const rotation = new THREE.Quaternion();
-        rotation.setFromEuler(new THREE.Euler(0, time, 0));
+        rotation.setFromEuler(new THREE.Euler(0, time * speed, 0));
         obstacle.current.setNextKinematicRotation(rotation);
     });
     return (
