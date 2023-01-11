@@ -14,7 +14,9 @@ const floor2Material = new THREE.MeshStandardMaterial({ color: 'greenyellow' });
 const obstacleMaterial = new THREE.MeshStandardMaterial({ color: 'orangered' });
 const wallMaterial = new THREE.MeshStandardMaterial({ color: 'slategrey' });
 
-// First Block
+/**
+ *  First Block
+ */
 const BlockStart = ({ position = [0, 0, 0] }) => {
     return (
         <group position={position}>
@@ -29,7 +31,9 @@ const BlockStart = ({ position = [0, 0, 0] }) => {
     );
 };
 
-// Block with spinner
+/**
+ *  Spinner Block
+ */
 const BlockSpinner = ({ position = [0, 0, 0] }) => {
     const obstacle = useRef();
     const [speed] = useState(() => (Math.random() + 0.2) * (Math.random() < 0.5 ? -1 : 1));
