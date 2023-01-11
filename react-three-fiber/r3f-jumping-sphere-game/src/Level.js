@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
@@ -209,18 +209,35 @@ export const BlockAxe = ({ position = [0, 0, 0] }) => {
 };
 
 export const Level = ({ count = 5, types = [BlockSpinner, BlockLimbo, BlockAxe] }) => {
-    console.log('🚀 ~ count', count);
-    console.log('🚀 ~ types', types);
+    // console.log('🚀 ~ count', count);
+    // console.log('🚀 ~ types', types);
+
+    /**
+     *  Generate a count long array of random traps chosen
+     *  from the types array and keep that array
+     *  and what’s inside even if the Level component
+     *  is being re-rendered.
+     */
+    const blocks = useMemo(() => {
+        const blocks = [];
+
+        for (let i = 0; i < count; i++) {
+            const type = types[Math.floor(Math.random() * types.length)];
+            blocks.push(type);
+        }
+
+        return blocks;
+    }, [count, types]);
 
     return (
         <>
             <BlockStart position={[0, 0, 0]} />
-            {/* 
-                <BlockSpinner position={[0, 0, 12]} />
-                <BlockLimbo position={[0, 0, 8]} />
-                <BlockAxe position={[0, 0, 4]} />
-                <BlockEnd position={[0, 0, 0]} /> 
-            */}
+
+            {blocks.map((Block, index) => (
+                <Block key={index} position={[0, 0, -(index + 1) * 4]} />
+            ))}
+
+            <BlockEnd position={[0, 0, -(count + 1) * 4]} />
         </>
     );
 };
