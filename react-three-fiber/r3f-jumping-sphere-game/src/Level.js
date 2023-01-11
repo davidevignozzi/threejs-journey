@@ -32,6 +32,23 @@ const BlockStart = ({ position = [0, 0, 0] }) => {
 };
 
 /**
+ *  End Block
+ */
+const BlockEnd = ({ position = [0, 0, 0] }) => {
+    return (
+        <group position={position}>
+            <mesh
+                geometry={boxGeometry}
+                material={floor1Material}
+                position={[0, -0.1, 0]}
+                scale={[4, 0.2, 4]}
+                receiveShadow
+            />
+        </group>
+    );
+};
+
+/**
  *  Spinner Block
  */
 const BlockSpinner = ({ position = [0, 0, 0] }) => {
@@ -175,10 +192,11 @@ const BlockAxe = ({ position = [0, 0, 0] }) => {
 const Level = () => {
     return (
         <>
-            <BlockStart position={[0, 0, 12]} />
-            <BlockSpinner position={[0, 0, 8]} />
-            <BlockLimbo position={[0, 0, 4]} />
-            <BlockAxe position={[0, 0, 0]} />
+            <BlockStart position={[0, 0, 16]} />
+            <BlockSpinner position={[0, 0, 12]} />
+            <BlockLimbo position={[0, 0, 8]} />
+            <BlockAxe position={[0, 0, 4]} />
+            <BlockEnd position={[0, 0, 0]} />
         </>
     );
 };
