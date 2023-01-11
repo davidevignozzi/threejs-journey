@@ -83,7 +83,7 @@ const BlockLimbo = ({ position = [0, 0, 0] }) => {
     const obstacle = useRef();
     const [timeOffset] = useState(() => Math.random() * Math.PI * 2);
 
-    // spinner animation
+    // LImbo animation
     useFrame((state) => {
         const time = state.clock.getElapsedTime();
 
@@ -104,7 +104,7 @@ const BlockLimbo = ({ position = [0, 0, 0] }) => {
                 receiveShadow
             />
 
-            {/* Spinner Obstacle */}
+            {/* Limbo Obstacle */}
             <RigidBody
                 ref={obstacle}
                 type="kinematicPosition"
