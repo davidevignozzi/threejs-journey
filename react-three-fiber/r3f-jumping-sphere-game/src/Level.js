@@ -25,10 +25,32 @@ const BlockStart = ({ position = [0, 0, 0] }) => {
     );
 };
 
+const BlockSpinner = ({ position = [0, 0, 0] }) => {
+    return (
+        <group position={position}>
+            <mesh
+                geometry={boxGeometry}
+                material={floor2Material}
+                position={[0, -0.1, 0]}
+                scale={[4, 0.2, 4]}
+                receiveShadow
+            />
+            <mesh
+                geometry={boxGeometry}
+                material={obstacleMaterial}
+                scale={[3.5, 0.3, 0.3]}
+                castShadow
+                receiveShadow
+            />
+        </group>
+    );
+};
+
 const Level = () => {
     return (
         <>
-            <BlockStart position={[0, 0, 0]} />
+            <BlockStart position={[0, 0, 4]} />
+            <BlockSpinner position={[0, 0, 0]} />
         </>
     );
 };
