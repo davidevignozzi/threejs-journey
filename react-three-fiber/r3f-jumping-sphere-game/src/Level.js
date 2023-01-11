@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
+import { useGLTF } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -35,6 +36,13 @@ const BlockStart = ({ position = [0, 0, 0] }) => {
  *  End Block
  */
 const BlockEnd = ({ position = [0, 0, 0] }) => {
+    const hamburger = useGLTF('./hamburger.glb');
+
+    // hamburger shadow
+    hamburger.scene.children.forEach((mesh) => {
+        mesh.castShadow = true;
+    });
+
     return (
         <group position={position}>
             <mesh
@@ -44,6 +52,17 @@ const BlockEnd = ({ position = [0, 0, 0] }) => {
                 scale={[4, 0.2, 4]}
                 receiveShadow
             />
+
+            {/* Hamburger */}
+            <RigidBody
+                type="fixed"
+                colliders="hull"
+                position={[0, 0.15, 0]}
+                restitution={0.2}
+                friction={0}
+            >
+                <primitive object={hamburger.scene} scale={0.2} />
+            </RigidBody>
         </group>
     );
 };
