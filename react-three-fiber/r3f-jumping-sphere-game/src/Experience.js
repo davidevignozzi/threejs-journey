@@ -7,6 +7,7 @@ import {
     // BlockLimbo,
     // BlockAxe
 } from './Level.js';
+import Player from './Player.js';
 import Lights from './Lights.js';
 
 export default function Experience() {
@@ -22,6 +23,7 @@ export default function Experience() {
                 // count={10}
                 // types={[BlockSpinner, BlockLimbo, BlockAxe]}
                 />
+                <Player />
             </Physics>
         </>
     );
