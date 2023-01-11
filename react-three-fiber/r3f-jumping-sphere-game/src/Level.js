@@ -208,6 +208,44 @@ export const BlockAxe = ({ position = [0, 0, 0] }) => {
     );
 };
 
+/**
+ * Bounds
+ */
+const Bounds = ({ length = 1 }) => {
+    return (
+        <>
+            <RigidBody type="fixed" restitution={0.2} friction={0}>
+                {/* Right wall */}
+                <mesh
+                    position={[2.15, 0.75, -(length * 2) + 2]}
+                    geometry={boxGeometry}
+                    material={wallMaterial}
+                    scale={[0.3, 1.5, 4 * length]}
+                    castShadow
+                />
+
+                {/* Left wall */}
+                <mesh
+                    position={[-2.15, 0.75, -(length * 2) + 2]}
+                    geometry={boxGeometry}
+                    material={wallMaterial}
+                    scale={[0.3, 1.5, 4 * length]}
+                    receiveShadow
+                />
+
+                {/* End Wall */}
+                <mesh
+                    position={[0, 0.75, -(length * 4) + 2]}
+                    geometry={boxGeometry}
+                    material={wallMaterial}
+                    scale={[4, 1.5, 0.3]}
+                    receiveShadow
+                />
+            </RigidBody>
+        </>
+    );
+};
+
 export const Level = ({ count = 5, types = [BlockSpinner, BlockLimbo, BlockAxe] }) => {
     // console.log('🚀 ~ count', count);
     // console.log('🚀 ~ types', types);
@@ -231,13 +269,19 @@ export const Level = ({ count = 5, types = [BlockSpinner, BlockLimbo, BlockAxe] 
 
     return (
         <>
+            {/* Start */}
             <BlockStart position={[0, 0, 0]} />
 
+            {/* Traps */}
             {blocks.map((Block, index) => (
                 <Block key={index} position={[0, 0, -(index + 1) * 4]} />
             ))}
 
+            {/* End */}
             <BlockEnd position={[0, 0, -(count + 1) * 4]} />
+
+            {/* Bounds */}
+            <Bounds length={count + 2} />
         </>
     );
 };
