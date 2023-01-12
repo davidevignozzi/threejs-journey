@@ -10,7 +10,7 @@ const Player = () => {
 
     const { rapier, world } = useRapier();
 
-    const [smoothCameraPosition] = useState(() => new THREE.Vector3());
+    const [smoothCameraPosition] = useState(() => new THREE.Vector3(10, 10, 10));
     const [smoothCameraTarget] = useState(() => new THREE.Vector3());
 
     /**
