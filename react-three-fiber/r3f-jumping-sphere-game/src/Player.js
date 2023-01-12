@@ -32,17 +32,21 @@ const Player = () => {
     };
 
     useEffect(() => {
-        subscribeKeys(
+        // user press the spacebar
+        const unSubscribeJump = subscribeKeys(
             // selector
             (state) => state.jump,
 
-            //
             (value) => {
                 if (value) {
                     jump();
                 }
             }
         );
+
+        return () => {
+            unSubscribeJump();
+        };
     }, []);
 
     useFrame((state, delta) => {
