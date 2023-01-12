@@ -27,7 +27,7 @@ const Player = () => {
         const hit = rapierWorld.castRay(
             ray,
             10,
-            true // tomake the floor solid
+            true // to make the floor solid
         );
 
         if (hit.toi < 0.15) {
