@@ -103,8 +103,8 @@ const Player = () => {
         cameraTarget.y += 0.25;
 
         // smoother camera
-        smoothCameraPosition.lerp(cameraPosition, 0.1);
-        smoothCameraTarget.lerp(cameraTarget, 0.1);
+        smoothCameraPosition.lerp(cameraPosition, 5 * delta);
+        smoothCameraTarget.lerp(cameraTarget, 5 * delta);
 
         state.camera.position.copy(smoothCameraPosition);
         state.camera.lookAt(smoothCameraTarget);
