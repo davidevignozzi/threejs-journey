@@ -9,7 +9,10 @@ body,
     background: ivory;
 }
 
-/* Interface */
+/**
+* Interface
+*
+*/
 .interface {
     position: fixed;
     top: 0;
@@ -37,6 +40,7 @@ body,
     border-radius: 0.5rem;
 }
 
+/* Restart */
 .restart {
     display: flex;
     justify-content: center;
@@ -50,4 +54,33 @@ body,
     padding-top: 10px;
     pointer-events: auto;
     cursor: pointer;
+}
+
+/* Controls */
+.controls {
+    position: absolute;
+    bottom: 7.5%;
+    right: 35%;
+    width: 100%;
+}
+
+.controls .raw {
+    display: flex;
+    justify-content: center;
+}
+
+.controls .key {
+    width: 40px;
+    height: 40px;
+    margin: 4px;
+    border: 2px solid #ffffff;
+    background: #ffffff44;
+}
+
+.controls .key.large {
+    width: 144px;
+}
+
+.controls .key.active {
+    background: #ffffff99;
 }
