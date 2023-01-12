@@ -7,6 +7,9 @@ const Interface = () => {
             <div className="time">
                 <span>0.00</span>
             </div>
+
+            {/* Restart */}
+            <div className="restart">restart</div>
         </div>
     );
 };

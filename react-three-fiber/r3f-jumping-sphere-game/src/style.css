@@ -36,3 +36,18 @@ body,
     padding: 5px 10px;
     border-radius: 0.5rem;
 }
+
+.restart {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 40%;
+    left: 0;
+    width: 100%;
+    font-size: 15vh;
+    color: #ffffff;
+    background: #00000033;
+    padding-top: 10px;
+    pointer-events: auto;
+    cursor: pointer;
+}
