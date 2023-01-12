@@ -19,3 +19,20 @@ body,
     pointer-events: none;
     font-family: 'Bebas Neue', cursive;
 }
+
+/* Timer */
+.time {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    width: 100%;
+    font-size: 6vh;
+    text-align: center;
+}
+
+.time span {
+    color: #ffffff;
+    background: #00000033;
+    padding: 5px 10px;
+    border-radius: 0.5rem;
+}
