@@ -42,7 +42,29 @@ const Player = () => {
         }
     };
 
+    /**
+     * Reset
+     */
+    const reset = () => {
+        body.current.setTranslation({ x: 0, y: 1, z: 0 });
+        body.current.setLinvel({ x: 0, y: 0, z: 0 });
+        body.current.setAngvel({ x: 0, y: 0, z: 0 });
+    };
+
     useEffect(() => {
+        //check if phase change
+        const unsubscribeReset = useGame.subscribe(
+            (state) => state.phase,
+            (value) => {
+                // console.log(`phase changed to ${value}`);
+
+                // phase is 'ready'
+                if (value === 'ready') {
+                    reset();
+                }
+            }
+        );
+
         // user press the spacebar
         const unSubscribeJump = subscribeKeys(
             // selector
@@ -64,6 +86,7 @@ const Player = () => {
         return () => {
             unSubscribeJump();
             unsubscribeAny();
+            unsubscribeReset();
         };
     }, []);
 
