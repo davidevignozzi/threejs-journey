@@ -59,6 +59,10 @@ export const BlockEnd = ({ position = [0, 0, 0] }) => {
 
     return (
         <group position={position}>
+            <Text font="./bebas-neue-v9-latin-regular.woff" scale={0.75} position={[0, 1.85, 2]}>
+                FINISH
+                <meshBasicMaterial toneMapped={false} />
+            </Text>
             <mesh
                 geometry={boxGeometry}
                 material={floor1Material}
