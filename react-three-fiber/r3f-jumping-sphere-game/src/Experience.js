@@ -10,6 +10,7 @@ import {
 } from './Level.js';
 import Player from './Player.js';
 import Lights from './Lights.js';
+import Effects from './Effects';
 
 export default function Experience() {
     const blocksCount = useGame((state) => state.blocksCount);
@@ -18,6 +19,7 @@ export default function Experience() {
     return (
         <>
             <color args={['#bdedfc']} attach="background" />
+
             <Physics>
                 {/* <Debug /> */}
                 <Lights />
@@ -29,6 +31,8 @@ export default function Experience() {
                 />
                 <Player />
             </Physics>
+
+            <Effects />
         </>
     );
 }
