@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useKeyboardControls } from '@react-three/drei';
 import { useRapier, RigidBody } from '@react-three/rapier';
+import useGame from './stores/useGame';
 
 const Player = () => {
     const body = useRef();
@@ -12,6 +13,9 @@ const Player = () => {
 
     const [smoothCameraPosition] = useState(() => new THREE.Vector3(10, 10, 10));
     const [smoothCameraTarget] = useState(() => new THREE.Vector3());
+
+    // -- useGame
+    const start = useGame((state) => state.start);
 
     /**
      * Jump
@@ -48,8 +52,15 @@ const Player = () => {
             }
         );
 
+        // change phase on key presed
+        const unsubscribeAny = subscribeKeys(() => {
+            // console.log('any key down');
+            start();
+        });
+
         return () => {
             unSubscribeJump();
+            unsubscribeAny();
         };
     }, []);
 
