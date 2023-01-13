@@ -1,5 +1,6 @@
 import React from 'react';
 import { useKeyboardControls } from '@react-three/drei';
+import useGame from './stores/useGame';
 
 const Interface = () => {
     const forward = useKeyboardControls((state) => state.forward);
@@ -7,6 +8,14 @@ const Interface = () => {
     const backward = useKeyboardControls((state) => state.backward);
     const leftward = useKeyboardControls((state) => state.leftward);
     const jump = useKeyboardControls((state) => state.jump);
+
+    //--------------------------------------
+    // will call the method in useGame.js
+    // that will set the phase to 'ready'
+    // when the phase change to 'ready'
+    // in Player.js call the reset function
+    // that bring the player to initial position
+    const restart = useGame((state) => state.restart);
 
     return (
         <div className="interface">
@@ -16,7 +25,9 @@ const Interface = () => {
             </div>
 
             {/* Restart */}
-            <div className="restart">restart</div>
+            <div className="restart" onClick={restart}>
+                restart
+            </div>
 
             {/* Controls */}
             <div className="controls">
