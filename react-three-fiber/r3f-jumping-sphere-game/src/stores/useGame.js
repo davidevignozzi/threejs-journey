@@ -8,6 +8,12 @@ export default create(
             blocksCount: 5,
 
             /**
+             * Time
+             */
+            startTime: 0,
+            endTime: 0,
+
+            /**
              * Phases
              */
             // * First fase
@@ -17,7 +23,7 @@ export default create(
             start: () => {
                 set((state) => {
                     if (state.phase === 'ready') {
-                        return { phase: 'playing' };
+                        return { phase: 'playing', startTime: Date.now() };
                     } else {
                         return {
                             // have to return something
@@ -45,7 +51,7 @@ export default create(
             end: () => {
                 set((state) => {
                     if (state.phase === 'playing') {
-                        return { phase: 'ended' };
+                        return { phase: 'ended', endTime: Date.now() };
                     } else {
                         return {
                             // have to return something
