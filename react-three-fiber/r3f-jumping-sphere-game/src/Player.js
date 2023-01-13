@@ -15,7 +15,9 @@ const Player = () => {
     const [smoothCameraTarget] = useState(() => new THREE.Vector3());
 
     // -- useGame
+    const blocksCount = useGame((state) => state.blocksCount);
     const start = useGame((state) => state.start);
+    const end = useGame((state) => state.end);
 
     /**
      * Jump
@@ -52,7 +54,7 @@ const Player = () => {
             }
         );
 
-        // change phase on key presed
+        // change phase to start on key presed
         const unsubscribeAny = subscribeKeys(() => {
             // console.log('any key down');
             start();
@@ -119,6 +121,14 @@ const Player = () => {
 
         state.camera.position.copy(smoothCameraPosition);
         state.camera.lookAt(smoothCameraTarget);
+
+        /**
+         * Phases
+         */
+        //  change phase to end when player arrive to the last block
+        if (bodyPosition.z < -(blocksCount * 4 + 2)) {
+            end();
+        }
     });
 
     return (
