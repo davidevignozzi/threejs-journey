@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
+import { useGLTF, Float, Text } from '@react-three/drei';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -21,6 +21,20 @@ const wallMaterial = new THREE.MeshStandardMaterial({ color: 'slategrey' });
 export const BlockStart = ({ position = [0, 0, 0] }) => {
     return (
         <group position={position}>
+            <Float floatIntensity={0.25} rotationIntensity={0.25}>
+                <Text
+                    font="./bebas-neue-v9-latin-regular.woff"
+                    scale={0.4}
+                    maxWidth={0.25}
+                    lineHeight={0.75}
+                    textAlign="right"
+                    position={[0.75, 0.85, 0]}
+                    rotation-y={(-0, 25)}
+                >
+                    Marble Race
+                    <meshBasicMaterial toneMapped={false} />
+                </Text>
+            </Float>
             <mesh
                 geometry={boxGeometry}
                 material={floor1Material}
