@@ -9,7 +9,12 @@ const Interface = () => {
     const leftward = useKeyboardControls((state) => state.leftward);
     const jump = useKeyboardControls((state) => state.jump);
 
-    //--------------------------------------
+    /**
+     * Phase
+     */
+    const phase = useGame((state) => state.phase);
+
+    //-------------------------------------- Restart
     // will call the method in useGame.js
     // that will set the phase to 'ready'
     // when the phase change to 'ready'
@@ -25,9 +30,11 @@ const Interface = () => {
             </div>
 
             {/* Restart */}
-            <div className="restart" onClick={restart}>
-                restart
-            </div>
+            {phase === 'ended' && (
+                <div className="restart" onClick={restart}>
+                    restart
+                </div>
+            )}
 
             {/* Controls */}
             <div className="controls">
