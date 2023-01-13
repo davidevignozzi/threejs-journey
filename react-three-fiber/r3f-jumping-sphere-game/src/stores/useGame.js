@@ -5,9 +5,12 @@ export default create(
     subscribeWithSelector((set) => {
         return {
             /**
-             * Block
+             * Blocks
              */
             blocksCount: 10,
+            // -- randomness
+            // on restart will change this value
+            // on change will call useMemo in Level.js
             blocksSeed: 0,
 
             /**
