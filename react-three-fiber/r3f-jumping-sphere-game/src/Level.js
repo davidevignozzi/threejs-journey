@@ -254,7 +254,7 @@ const Bounds = ({ length = 1 }) => {
     );
 };
 
-export const Level = ({ count = 5, types = [BlockSpinner, BlockLimbo, BlockAxe] }) => {
+export const Level = ({ count = 5, types = [BlockSpinner, BlockLimbo, BlockAxe], seed = 0 }) => {
     // console.log('🚀 ~ count', count);
     // console.log('🚀 ~ types', types);
 
@@ -273,7 +273,7 @@ export const Level = ({ count = 5, types = [BlockSpinner, BlockLimbo, BlockAxe] 
         }
 
         return blocks;
-    }, [count, types]);
+    }, [count, types, seed]);
 
     return (
         <>
