@@ -75,6 +75,11 @@ body,
     margin: 4px;
     border: 2px solid #ffffff;
     background: #ffffff44;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
 }
 
 .controls .key.large {
