@@ -18,6 +18,7 @@ const Player = () => {
     const blocksCount = useGame((state) => state.blocksCount);
     const start = useGame((state) => state.start);
     const end = useGame((state) => state.end);
+    const restart = useGame((state) => state.restart);
 
     /**
      * Jump
@@ -128,6 +129,11 @@ const Player = () => {
         //  change phase to end when player arrive to the last block
         if (bodyPosition.z < -(blocksCount * 4 + 2)) {
             end();
+        }
+
+        //  change phase to restart when player fall
+        if (bodyPosition.y < -4) {
+            restart();
         }
     });
 
