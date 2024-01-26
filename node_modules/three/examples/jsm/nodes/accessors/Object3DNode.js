@@ -1,15 +1,11 @@
-import { Vector3 } from 'three';
-import Node from '../core/Node.js';
-import UniformNode from '../core/UniformNode.js';
+import Node, { addNodeClass } from '../core/Node.js';
 import { NodeUpdateType } from '../core/constants.js';
+import UniformNode from '../core/UniformNode.js';
+import { nodeProxy } from '../shadernode/ShaderNode.js';
+
+import { Vector3 } from 'three';
 
 class Object3DNode extends Node {
-
-	static VIEW_MATRIX = 'viewMatrix';
-	static NORMAL_MATRIX = 'normalMatrix';
-	static WORLD_MATRIX = 'worldMatrix';
-	static POSITION = 'position';
-	static VIEW_POSITION = 'viewPosition';
 
 	constructor( scope = Object3DNode.VIEW_MATRIX, object3d = null ) {
 
@@ -18,7 +14,7 @@ class Object3DNode extends Node {
 		this.scope = scope;
 		this.object3d = object3d;
 
-		this.updateType = NodeUpdateType.Object;
+		this.updateType = NodeUpdateType.OBJECT;
 
 		this._uniformNode = new UniformNode( null );
 
@@ -36,7 +32,7 @@ class Object3DNode extends Node {
 
 			return 'mat3';
 
-		} else if ( scope === Object3DNode.POSITION || scope === Object3DNode.VIEW_POSITION ) {
+		} else if ( scope === Object3DNode.POSITION || scope === Object3DNode.VIEW_POSITION || scope === Object3DNode.DIRECTION || scope === Object3DNode.SCALE ) {
 
 			return 'vec3';
 
@@ -46,9 +42,8 @@ class Object3DNode extends Node {
 
 	update( frame ) {
 
-		const object = this.object3d !== null ? this.object3d : frame.object;
+		const object = this.object3d;
 		const uniformNode = this._uniformNode;
-		const camera = frame.camera;
 		const scope = this.scope;
 
 		if ( scope === Object3DNode.VIEW_MATRIX ) {
@@ -65,10 +60,27 @@ class Object3DNode extends Node {
 
 		} else if ( scope === Object3DNode.POSITION ) {
 
+			uniformNode.value = uniformNode.value || new Vector3();
+
 			uniformNode.value.setFromMatrixPosition( object.matrixWorld );
+
+		} else if ( scope === Object3DNode.SCALE ) {
+
+			uniformNode.value = uniformNode.value || new Vector3();
+
+			uniformNode.value.setFromMatrixScale( object.matrixWorld );
+
+		} else if ( scope === Object3DNode.DIRECTION ) {
+
+			uniformNode.value = uniformNode.value || new Vector3();
+
+			object.getWorldDirection( uniformNode.value );
 
 		} else if ( scope === Object3DNode.VIEW_POSITION ) {
 
+			const camera = frame.camera;
+
+			uniformNode.value = uniformNode.value || new Vector3();
 			uniformNode.value.setFromMatrixPosition( object.matrixWorld );
 
 			uniformNode.value.applyMatrix4( camera.matrixWorldInverse );
@@ -89,10 +101,9 @@ class Object3DNode extends Node {
 
 			this._uniformNode.nodeType = 'mat3';
 
-		} else if ( scope === Object3DNode.POSITION || scope === Object3DNode.VIEW_POSITION ) {
+		} else if ( scope === Object3DNode.POSITION || scope === Object3DNode.VIEW_POSITION || scope === Object3DNode.DIRECTION || scope === Object3DNode.SCALE ) {
 
 			this._uniformNode.nodeType = 'vec3';
-			this._uniformNode.value = new Vector3();
 
 		}
 
@@ -118,4 +129,22 @@ class Object3DNode extends Node {
 
 }
 
+Object3DNode.VIEW_MATRIX = 'viewMatrix';
+Object3DNode.NORMAL_MATRIX = 'normalMatrix';
+Object3DNode.WORLD_MATRIX = 'worldMatrix';
+Object3DNode.POSITION = 'position';
+Object3DNode.SCALE = 'scale';
+Object3DNode.VIEW_POSITION = 'viewPosition';
+Object3DNode.DIRECTION = 'direction';
+
 export default Object3DNode;
+
+export const objectDirection = nodeProxy( Object3DNode, Object3DNode.DIRECTION );
+export const objectViewMatrix = nodeProxy( Object3DNode, Object3DNode.VIEW_MATRIX );
+export const objectNormalMatrix = nodeProxy( Object3DNode, Object3DNode.NORMAL_MATRIX );
+export const objectWorldMatrix = nodeProxy( Object3DNode, Object3DNode.WORLD_MATRIX );
+export const objectPosition = nodeProxy( Object3DNode, Object3DNode.POSITION );
+export const objectScale = nodeProxy( Object3DNode, Object3DNode.SCALE );
+export const objectViewPosition = nodeProxy( Object3DNode, Object3DNode.VIEW_POSITION );
+
+addNodeClass( 'Object3DNode', Object3DNode );

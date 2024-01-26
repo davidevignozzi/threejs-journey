@@ -19,6 +19,8 @@ class CSS3DObject extends Object3D {
 
 		super();
 
+		this.isCSS3DObject = true;
+
 		this.element = element;
 		this.element.style.position = 'absolute';
 		this.element.style.pointerEvents = 'auto';
@@ -54,13 +56,13 @@ class CSS3DObject extends Object3D {
 
 }
 
-CSS3DObject.prototype.isCSS3DObject = true;
-
 class CSS3DSprite extends CSS3DObject {
 
 	constructor( element ) {
 
 		super( element );
+
+		this.isCSS3DSprite = true;
 
 		this.rotation2D = 0;
 
@@ -78,8 +80,6 @@ class CSS3DSprite extends CSS3DObject {
 
 }
 
-CSS3DSprite.prototype.isCSS3DSprite = true;
-
 //
 
 const _matrix = new Matrix4();
@@ -95,7 +95,7 @@ class CSS3DRenderer {
 		let _widthHalf, _heightHalf;
 
 		const cache = {
-			camera: { fov: 0, style: '' },
+			camera: { style: '' },
 			objects: new WeakMap()
 		};
 
@@ -105,12 +105,16 @@ class CSS3DRenderer {
 
 		this.domElement = domElement;
 
+		const viewElement = document.createElement( 'div' );
+		viewElement.style.transformOrigin = '0 0';
+		viewElement.style.pointerEvents = 'none';
+		domElement.appendChild( viewElement );
+
 		const cameraElement = document.createElement( 'div' );
 
 		cameraElement.style.transformStyle = 'preserve-3d';
-		cameraElement.style.pointerEvents = 'none';
 
-		domElement.appendChild( cameraElement );
+		viewElement.appendChild( cameraElement );
 
 		this.getSize = function () {
 
@@ -125,15 +129,22 @@ class CSS3DRenderer {
 
 			const fov = camera.projectionMatrix.elements[ 5 ] * _heightHalf;
 
-			if ( cache.camera.fov !== fov ) {
+			if ( camera.view && camera.view.enabled ) {
 
-				domElement.style.perspective = camera.isPerspectiveCamera ? fov + 'px' : '';
-				cache.camera.fov = fov;
+				// view offset
+				viewElement.style.transform = `translate( ${ - camera.view.offsetX * ( _width / camera.view.width ) }px, ${ - camera.view.offsetY * ( _height / camera.view.height ) }px )`;
+
+				// view fullWidth and fullHeight, view width and height
+				viewElement.style.transform += `scale( ${ camera.view.fullWidth / camera.view.width }, ${ camera.view.fullHeight / camera.view.height } )`;
+
+			} else {
+
+				viewElement.style.transform = '';
 
 			}
 
-			if ( scene.autoUpdate === true ) scene.updateMatrixWorld();
-			if ( camera.parent === null ) camera.updateMatrixWorld();
+			if ( scene.matrixWorldAutoUpdate === true ) scene.updateMatrixWorld();
+			if ( camera.parent === null && camera.matrixWorldAutoUpdate === true ) camera.updateMatrixWorld();
 
 			let tx, ty;
 
@@ -144,11 +155,13 @@ class CSS3DRenderer {
 
 			}
 
+			const scaleByViewOffset = camera.view && camera.view.enabled ? camera.view.height / camera.view.fullHeight : 1;
 			const cameraCSSMatrix = camera.isOrthographicCamera ?
-				'scale(' + fov + ')' + 'translate(' + epsilon( tx ) + 'px,' + epsilon( ty ) + 'px)' + getCameraCSSMatrix( camera.matrixWorldInverse ) :
-				'translateZ(' + fov + 'px)' + getCameraCSSMatrix( camera.matrixWorldInverse );
+				`scale( ${ scaleByViewOffset } )` + 'scale(' + fov + ')' + 'translate(' + epsilon( tx ) + 'px,' + epsilon( ty ) + 'px)' + getCameraCSSMatrix( camera.matrixWorldInverse ) :
+				`scale( ${ scaleByViewOffset } )` + 'translateZ(' + fov + 'px)' + getCameraCSSMatrix( camera.matrixWorldInverse );
+			const perspective = camera.isPerspectiveCamera ? 'perspective(' + fov + 'px) ' : '';
 
-			const style = cameraCSSMatrix +
+			const style = perspective + cameraCSSMatrix +
 				'translate(' + _widthHalf + 'px,' + _heightHalf + 'px)';
 
 			if ( cache.camera.style !== style ) {
@@ -172,6 +185,9 @@ class CSS3DRenderer {
 
 			domElement.style.width = width + 'px';
 			domElement.style.height = height + 'px';
+
+			viewElement.style.width = width + 'px';
+			viewElement.style.height = height + 'px';
 
 			cameraElement.style.width = width + 'px';
 			cameraElement.style.height = height + 'px';

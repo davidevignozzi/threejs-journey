@@ -3,11 +3,11 @@ import { NearestFilter } from '../constants.js';
 
 class FramebufferTexture extends Texture {
 
-	constructor( width, height, format ) {
+	constructor( width, height ) {
 
 		super( { width, height } );
 
-		this.format = format;
+		this.isFramebufferTexture = true;
 
 		this.magFilter = NearestFilter;
 		this.minFilter = NearestFilter;
@@ -19,7 +19,5 @@ class FramebufferTexture extends Texture {
 	}
 
 }
-
-FramebufferTexture.prototype.isFramebufferTexture = true;
 
 export { FramebufferTexture };

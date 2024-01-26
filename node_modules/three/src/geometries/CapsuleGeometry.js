@@ -15,7 +15,7 @@ class CapsuleGeometry extends LatheGeometry {
 
 		this.parameters = {
 			radius: radius,
-			height: length,
+			length: length,
 			capSegments: capSegments,
 			radialSegments: radialSegments,
 		};
@@ -30,4 +30,4 @@ class CapsuleGeometry extends LatheGeometry {
 
 }
 
-export { CapsuleGeometry, CapsuleGeometry as CapsuleBufferGeometry };
+export { CapsuleGeometry };

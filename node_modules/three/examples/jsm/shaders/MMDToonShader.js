@@ -15,7 +15,7 @@
 
 import { UniformsUtils, ShaderLib } from 'three';
 
-const lights_mmd_toon_pars_fragment = `
+const lights_mmd_toon_pars_fragment = /* glsl */`
 varying vec3 vViewPosition;
 
 struct BlinnPhongMaterial {
@@ -27,17 +27,17 @@ struct BlinnPhongMaterial {
 
 };
 
-void RE_Direct_BlinnPhong( const in IncidentLight directLight, const in GeometricContext geometry, const in BlinnPhongMaterial material, inout ReflectedLight reflectedLight ) {
+void RE_Direct_BlinnPhong( const in IncidentLight directLight, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, const in BlinnPhongMaterial material, inout ReflectedLight reflectedLight ) {
 
-	vec3 irradiance = getGradientIrradiance( geometry.normal, directLight.direction ) * directLight.color;
+	vec3 irradiance = getGradientIrradiance( geometryNormal, directLight.direction ) * directLight.color;
 
 	reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );
 
-	reflectedLight.directSpecular += irradiance * BRDF_BlinnPhong( directLight.direction, geometry.viewDir, geometry.normal, material.specularColor, material.specularShininess ) * material.specularStrength;
+	reflectedLight.directSpecular += irradiance * BRDF_BlinnPhong( directLight.direction, geometryViewDir, geometryNormal, material.specularColor, material.specularShininess ) * material.specularStrength;
 
 }
 
-void RE_IndirectDiffuse_BlinnPhong( const in vec3 irradiance, const in GeometricContext geometry, const in BlinnPhongMaterial material, inout ReflectedLight reflectedLight ) {
+void RE_IndirectDiffuse_BlinnPhong( const in vec3 irradiance, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, const in BlinnPhongMaterial material, inout ReflectedLight reflectedLight ) {
 
 	reflectedLight.indirectDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );
 
@@ -45,11 +45,9 @@ void RE_IndirectDiffuse_BlinnPhong( const in vec3 irradiance, const in Geometric
 
 #define RE_Direct				RE_Direct_BlinnPhong
 #define RE_IndirectDiffuse		RE_IndirectDiffuse_BlinnPhong
-
-#define Material_LightProbeLOD( material )	(0)
 `;
 
-const mmd_toon_matcap_fragment = `
+const mmd_toon_matcap_fragment = /* glsl */`
 #ifdef USE_MATCAP
 
 	vec3 viewDir = normalize( vViewPosition );
@@ -73,6 +71,8 @@ const mmd_toon_matcap_fragment = `
 
 const MMDToonShader = {
 
+	name: 'MMDToonShader',
+
 	defines: {
 		TOON: true,
 		MATCAP: true,
@@ -85,7 +85,16 @@ const MMDToonShader = {
 		ShaderLib.matcap.uniforms,
 	] ),
 
-	vertexShader: ShaderLib.phong.vertexShader,
+	vertexShader:
+		ShaderLib.phong.vertexShader
+			.replace(
+				'#include <envmap_pars_vertex>',
+				''
+			)
+			.replace(
+				'#include <envmap_vertex>',
+				''
+			),
 
 	fragmentShader:
 		ShaderLib.phong.fragmentShader
@@ -103,8 +112,11 @@ const MMDToonShader = {
 				'#include <envmap_common_pars_fragment>',
 				`
 					#include <gradientmap_pars_fragment>
-					#include <envmap_common_pars_fragment>
 				`
+			)
+			.replace(
+				'#include <envmap_pars_fragment>',
+				''
 			)
 			.replace(
 				'#include <lights_phong_pars_fragment>',
@@ -113,10 +125,9 @@ const MMDToonShader = {
 			.replace(
 				'#include <envmap_fragment>',
 				`
-					#include <envmap_fragment>
 					${mmd_toon_matcap_fragment}
 				`
-			),
+			)
 
 };
 
