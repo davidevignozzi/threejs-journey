@@ -1,14 +1,22 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import GUI from 'lil-gui'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
+
+/**
+ * Loaders
+ */
+const gltfLoader = new GLTFLoader()
+const rgbeLoader = new RGBELoader()
+const textureLoader = new THREE.TextureLoader()
 
 /**
  * Base
  */
 // Debug
 const gui = new GUI()
+const global = {}
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -17,55 +25,146 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 /**
+ * Update all materials
+ */
+const updateAllMaterials = () =>
+{
+    scene.traverse((child) =>
+    {
+        if(child.isMesh && child.material.isMeshStandardMaterial)
+        {
+            child.material.envMapIntensity = global.envMapIntensity
+
+            child.castShadow = true
+            child.receiveShadow = true
+        }
+    })
+}
+
+/**
+ * Environment map
+ */
+// Global intensity
+global.envMapIntensity = 1
+gui
+    .add(global, 'envMapIntensity')
+    .min(0)
+    .max(10)
+    .step(0.001)
+    .onChange(updateAllMaterials)
+
+// HDR (RGBE) equirectangular
+rgbeLoader.load('/environmentMaps/0/2k.hdr', (environmentMap) =>
+{
+    environmentMap.mapping = THREE.EquirectangularReflectionMapping
+
+    scene.background = environmentMap
+    scene.environment = environmentMap
+})
+
+/**
+ * Directional light
+ */
+const directionalLight = new THREE.DirectionalLight('#ffffff', 6)
+directionalLight.position.set(- 4, 6.5, 2.5)
+scene.add(directionalLight)
+
+gui.add(directionalLight, 'intensity').min(0).max(10).step(0.001).name('lightIntensity')
+gui.add(directionalLight.position, 'x').min(- 10).max(10).step(0.001).name('lightX')
+gui.add(directionalLight.position, 'y').min(- 10).max(10).step(0.001).name('lightY')
+gui.add(directionalLight.position, 'z').min(- 10).max(10).step(0.001).name('lightZ')
+
+// Shadows
+directionalLight.castShadow = true
+directionalLight.shadow.camera.far = 15
+directionalLight.shadow.normalBias = 0.027
+directionalLight.shadow.bias = - 0.004
+directionalLight.shadow.mapSize.set(512, 512)
+
+gui.add(directionalLight, 'castShadow')
+gui.add(directionalLight.shadow, 'normalBias').min(- 0.05).max(0.05).step(0.001)
+gui.add(directionalLight.shadow, 'bias').min(- 0.05).max(0.05).step(0.001)
+
+// Target
+directionalLight.target.position.set(0, 4, 0)
+directionalLight.target.updateWorldMatrix()
+
+// // Helper
+// const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
+// scene.add(directionalLightCameraHelper)
+
+/**
  * Models
  */
-const dracoLoader = new DRACOLoader()
-dracoLoader.setDecoderPath('/draco/')
-
-const gltfLoader = new GLTFLoader()
-gltfLoader.setDRACOLoader(dracoLoader)
-
-let mixer = null
-
+// Helmet
 gltfLoader.load(
-    '/models/hamburger.glb',
+    '/models/FlightHelmet/glTF/FlightHelmet.gltf',
     (gltf) =>
     {
+        gltf.scene.scale.set(10, 10, 10)
         scene.add(gltf.scene)
+
+        updateAllMaterials()
     }
 )
+
+// // Hamburger
+// gltfLoader.load(
+//     '/models/hamburger.glb',
+//     (gltf) =>
+//     {
+//         gltf.scene.scale.set(0.4, 0.4, 0.4)
+//         gltf.scene.position.set(0, 2.5, 0)
+//         scene.add(gltf.scene)
+
+//         updateAllMaterials()
+//     }
+// )
 
 /**
  * Floor
  */
+const floorColorTexture = textureLoader.load('/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_diff_1k.jpg')
+const floorNormalTexture = textureLoader.load('/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_nor_gl_1k.png')
+const floorAORoughnessMetalnessTexture = textureLoader.load('/textures/wood_cabinet_worn_long/wood_cabinet_worn_long_arm_1k.jpg')
+
+floorColorTexture.colorSpace = THREE.SRGBColorSpace
+
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(50, 50),
+    new THREE.PlaneGeometry(8, 8),
     new THREE.MeshStandardMaterial({
-        color: '#444444',
-        metalness: 0,
-        roughness: 0.5
+        map: floorColorTexture,
+        normalMap: floorNormalTexture,
+        aoMap: floorAORoughnessMetalnessTexture,
+        roughnessMap: floorAORoughnessMetalnessTexture,
+        metalnessMap: floorAORoughnessMetalnessTexture,
     })
 )
-floor.receiveShadow = true
 floor.rotation.x = - Math.PI * 0.5
 scene.add(floor)
 
 /**
- * Lights
+ * Wall
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 2.4)
-scene.add(ambientLight)
+const wallColorTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_diff_1k.jpg')
+const wallNormalTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_nor_gl_1k.png')
+const wallAORoughnessMetalnessTexture = textureLoader.load('/textures/castle_brick_broken_06/castle_brick_broken_06_arm_1k.jpg')
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8)
-directionalLight.castShadow = true
-directionalLight.shadow.mapSize.set(1024, 1024)
-directionalLight.shadow.camera.far = 15
-directionalLight.shadow.camera.left = - 7
-directionalLight.shadow.camera.top = 7
-directionalLight.shadow.camera.right = 7
-directionalLight.shadow.camera.bottom = - 7
-directionalLight.position.set(5, 5, 5)
-scene.add(directionalLight)
+wallColorTexture.colorSpace = THREE.SRGBColorSpace
+
+const wall = new THREE.Mesh(
+    new THREE.PlaneGeometry(8, 8),
+    new THREE.MeshStandardMaterial({
+        map: wallColorTexture,
+        normalMap: wallNormalTexture,
+        aoMap: wallAORoughnessMetalnessTexture,
+        roughnessMap: wallAORoughnessMetalnessTexture,
+        metalnessMap: wallAORoughnessMetalnessTexture,
+    })
+)
+wall.position.y = 4
+wall.position.z = - 4
+scene.add(wall)
 
 /**
  * Sizes
@@ -95,42 +194,46 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(- 8, 4, 8)
+camera.position.set(4, 5, 4)
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
-controls.target.set(0, 1, 0)
+controls.target.y = 3.5
 controls.enableDamping = true
 
 /**
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
+    canvas: canvas,
+    antialias: true
 })
-renderer.shadowMap.enabled = true
-renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+// Tone mapping
+renderer.toneMapping = THREE.ReinhardToneMapping
+renderer.toneMappingExposure = 3
+
+gui.add(renderer, 'toneMapping', {
+    No: THREE.NoToneMapping,
+    Linear: THREE.LinearToneMapping,
+    Reinhard: THREE.ReinhardToneMapping,
+    Cineon: THREE.CineonToneMapping,
+    ACESFilmic: THREE.ACESFilmicToneMapping
+})
+gui.add(renderer, 'toneMappingExposure').min(0).max(10).step(0.001)
+
+// Shadows
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 /**
  * Animate
  */
-const clock = new THREE.Clock()
-let previousTime = 0
-
 const tick = () =>
 {
-    const elapsedTime = clock.getElapsedTime()
-    const deltaTime = elapsedTime - previousTime
-    previousTime = elapsedTime
-
-    if(mixer)
-    {
-        mixer.update(deltaTime)
-    }
-
     // Update controls
     controls.update()
 
