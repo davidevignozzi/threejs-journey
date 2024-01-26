@@ -1,11 +1,25 @@
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
+import './style.css'
+import ReactDOM from 'react-dom/client'
+import { Canvas } from '@react-three/fiber'
+import Experience from './Experience.jsx'
+import * as THREE from 'three'
 
-const root = createRoot(document.querySelector('#root'))
+const root = ReactDOM.createRoot(document.querySelector('#root'))
 
 root.render(
-    <App clickersCount={ 3 }>
-        <h1>My First React App</h1>
-        <h2>And a fancy subtitle</h2>
-    </App>
+    <Canvas
+        gl={ {
+            antialias: true,
+            toneMapping: THREE.ACESFilmicToneMapping,
+            // outputColorSpace: THREE.SRGBColorSpace
+        } }
+        camera={ {
+            fov: 45,
+            near: 0.1,
+            far: 200,
+            position: [ 3, 2, 6 ]
+        } }
+    >
+        <Experience />
+    </Canvas>
 )

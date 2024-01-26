@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "react": "18.2",
-    "react-dom": "18.2"
+    "react-dom": "18.2",
+    "@react-three/fiber": "^8.15.8",
+    "three": "^0.158.0"
   }
 }
