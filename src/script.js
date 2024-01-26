@@ -1,18 +1,45 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import Stats from 'stats.js'
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { gsap } from 'gsap'
 
 /**
- * Stats
+ * Loaders
  */
-const stats = new Stats()
-stats.showPanel(0)
-document.body.appendChild(stats.dom)
+const loadingBarElement = document.querySelector('.loading-bar')
+const loadingManager = new THREE.LoadingManager(
+    // Loaded
+    () =>
+    {
+        // Wait a little
+        window.setTimeout(() =>
+        {
+            // Animate overlay
+            gsap.to(overlayMaterial.uniforms.uAlpha, { duration: 3, value: 0, delay: 1 })
+
+            // Update loadingBarElement
+            loadingBarElement.classList.add('ended')
+            loadingBarElement.style.transform = ''
+        }, 500)
+    },
+
+    // Progress
+    (itemUrl, itemsLoaded, itemsTotal) =>
+    {
+        // Calculate the progress and update the loadingBarElement
+        const progressRatio = itemsLoaded / itemsTotal
+        loadingBarElement.style.transform = `scaleX(${progressRatio})`
+    }
+)
+const gltfLoader = new GLTFLoader(loadingManager)
+const cubeTextureLoader = new THREE.CubeTextureLoader(loadingManager)
 
 /**
  * Base
  */
+// Debug
+const debugObject = {}
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -20,10 +47,97 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 /**
- * Textures
+ * Overlay
  */
-const textureLoader = new THREE.TextureLoader()
-const displacementTexture = textureLoader.load('/textures/displacementMap.png')
+const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1)
+const overlayMaterial = new THREE.ShaderMaterial({
+    // wireframe: true,
+    transparent: true,
+    uniforms:
+    {
+        uAlpha: { value: 1 }
+    },
+    vertexShader: `
+        void main()
+        {
+            gl_Position = vec4(position, 1.0);
+        }
+    `,
+    fragmentShader: `
+        uniform float uAlpha;
+
+        void main()
+        {
+            gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
+        }
+    `
+})
+const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial)
+scene.add(overlay)
+
+/**
+ * Update all materials
+ */
+const updateAllMaterials = () =>
+{
+    scene.traverse((child) =>
+    {
+        if(child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial)
+        {
+            // child.material.envMap = environmentMap
+            child.material.envMapIntensity = debugObject.envMapIntensity
+            child.material.needsUpdate = true
+            child.castShadow = true
+            child.receiveShadow = true
+        }
+    })
+}
+
+/**
+ * Environment map
+ */
+const environmentMap = cubeTextureLoader.load([
+    '/textures/environmentMaps/0/px.jpg',
+    '/textures/environmentMaps/0/nx.jpg',
+    '/textures/environmentMaps/0/py.jpg',
+    '/textures/environmentMaps/0/ny.jpg',
+    '/textures/environmentMaps/0/pz.jpg',
+    '/textures/environmentMaps/0/nz.jpg'
+])
+
+environmentMap.colorSpace = THREE.SRGBColorSpace
+
+scene.background = environmentMap
+scene.environment = environmentMap
+
+debugObject.envMapIntensity = 2.5
+
+/**
+ * Models
+ */
+gltfLoader.load(
+    '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+    (gltf) =>
+    {
+        gltf.scene.scale.set(10, 10, 10)
+        gltf.scene.position.set(0, - 4, 0)
+        gltf.scene.rotation.y = Math.PI * 0.5
+        scene.add(gltf.scene)
+
+        updateAllMaterials()
+    }
+)
+
+/**
+ * Lights
+ */
+const directionalLight = new THREE.DirectionalLight('#ffffff', 3)
+directionalLight.castShadow = true
+directionalLight.shadow.camera.far = 15
+directionalLight.shadow.mapSize.set(1024, 1024)
+directionalLight.shadow.normalBias = 0.05
+directionalLight.position.set(0.25, 3, - 2.25)
+scene.add(directionalLight)
 
 /**
  * Sizes
@@ -53,7 +167,7 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(2, 2, 6)
+camera.position.set(4, 1, - 4)
 scene.add(camera)
 
 // Controls
@@ -65,78 +179,20 @@ controls.enableDamping = true
  */
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
-    powerPreference: 'high-performance',
     antialias: true
 })
+renderer.toneMapping = THREE.ReinhardToneMapping
+renderer.toneMappingExposure = 3
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 /**
- * Test meshes
- */
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(2, 2, 2),
-    new THREE.MeshStandardMaterial()
-)
-cube.castShadow = true
-cube.receiveShadow = true
-cube.position.set(- 5, 0, 0)
-// scene.add(cube)
-
-const torusKnot = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(1, 0.4, 128, 32),
-    new THREE.MeshStandardMaterial()
-)
-torusKnot.castShadow = true
-torusKnot.receiveShadow = true
-// scene.add(torusKnot)
-
-const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 32, 32),
-    new THREE.MeshStandardMaterial()
-)
-sphere.position.set(5, 0, 0)
-sphere.castShadow = true
-sphere.receiveShadow = true
-// scene.add(sphere)
-
-const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(10, 10),
-    new THREE.MeshStandardMaterial()
-)
-floor.position.set(0, - 2, 0)
-floor.rotation.x = - Math.PI * 0.5
-floor.castShadow = true
-floor.receiveShadow = true
-// scene.add(floor)
-
-// /**
-//  * Lights
-//  */
-// const directionalLight = new THREE.DirectionalLight('#ffffff', 3)
-// directionalLight.castShadow = true
-// directionalLight.shadow.mapSize.set(1024, 1024)
-// directionalLight.shadow.camera.far = 15
-// directionalLight.shadow.normalBias = 0.05
-// directionalLight.position.set(0.25, 3, 2.25)
-// scene.add(directionalLight)
-
-/**
  * Animate
  */
-const clock = new THREE.Clock()
-
 const tick = () =>
 {
-    stats.begin()
-
-    const elapsedTime = clock.getElapsedTime()
-
-    // Update test mesh
-    torusKnot.rotation.y = elapsedTime * 0.1
-
     // Update controls
     controls.update()
 
@@ -145,185 +201,6 @@ const tick = () =>
 
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
-
-    stats.end()
 }
 
 tick()
-
-/**
- * Tips
- */
-
-// // Tip 4
-// console.log(renderer.info)
-
-// // Tip 6
-// scene.remove(cube)
-// cube.geometry.dispose()
-// cube.material.dispose()
-
-// // Tip 10
-// directionalLight.shadow.camera.top = 3
-// directionalLight.shadow.camera.right = 6
-// directionalLight.shadow.camera.left = - 6
-// directionalLight.shadow.camera.bottom = - 3
-// directionalLight.shadow.camera.far = 10
-// directionalLight.shadow.mapSize.set(1024, 1024)
-
-// const cameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
-// scene.add(cameraHelper)
-
-// // Tip 11
-// cube.castShadow = true
-// cube.receiveShadow = false
-
-// torusKnot.castShadow = true
-// torusKnot.receiveShadow = false
-
-// sphere.castShadow = true
-// sphere.receiveShadow = false
-
-// floor.castShadow = false
-// floor.receiveShadow = true
-
-// // Tip 12
-// renderer.shadowMap.autoUpdate = false
-// renderer.shadowMap.needsUpdate = true
-
-// // Tip 18
-// const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-
-// for(let i = 0; i < 50; i++)
-// {
-//     const material = new THREE.MeshNormalMaterial()
-    
-//     const mesh = new THREE.Mesh(geometry, material)
-//     mesh.position.x = (Math.random() - 0.5) * 10
-//     mesh.position.y = (Math.random() - 0.5) * 10
-//     mesh.position.z = (Math.random() - 0.5) * 10
-//     mesh.rotation.x = (Math.random() - 0.5) * Math.PI * 2
-//     mesh.rotation.y = (Math.random() - 0.5) * Math.PI * 2
-
-//     scene.add(mesh)
-// }
-
-// // Tip 19
-// const geometries = []
-
-// for(let i = 0; i < 50; i++)
-// {
-//     const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-
-//     geometry.rotateX((Math.random() - 0.5) * Math.PI * 2)
-//     geometry.rotateY((Math.random() - 0.5) * Math.PI * 2)
-
-//     geometry.translate(
-//         (Math.random() - 0.5) * 10,
-//         (Math.random() - 0.5) * 10,
-//         (Math.random() - 0.5) * 10
-//     )
-
-//     geometries.push(geometry)
-// }
-
-// const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometries)
-// const material = new THREE.MeshNormalMaterial()
-// const mesh = new THREE.Mesh(mergedGeometry, material)
-// scene.add(mesh)
-
-// // Tip 20
-// const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-// const material = new THREE.MeshNormalMaterial()
-
-// for(let i = 0; i < 50; i++)
-// {
-//     const mesh = new THREE.Mesh(geometry, material)
-//     mesh.position.x = (Math.random() - 0.5) * 10
-//     mesh.position.y = (Math.random() - 0.5) * 10
-//     mesh.position.z = (Math.random() - 0.5) * 10
-//     mesh.rotation.x = (Math.random() - 0.5) * Math.PI * 2
-//     mesh.rotation.y = (Math.random() - 0.5) * Math.PI * 2
-
-//     scene.add(mesh)
-// }
-
-// // Tip 22
-// const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-// const material = new THREE.MeshNormalMaterial()
-
-// const mesh = new THREE.InstancedMesh(geometry, material, 50)
-// mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
-// scene.add(mesh)
-    
-// for(let i = 0; i < 50; i++)
-// {
-//     const position = new THREE.Vector3(
-//         (Math.random() - 0.5) * 10,
-//         (Math.random() - 0.5) * 10,
-//         (Math.random() - 0.5) * 10
-//     )
-
-//     const quaternion = new THREE.Quaternion()
-//     quaternion.setFromEuler(new THREE.Euler(
-//         (Math.random() - 0.5) * Math.PI * 2,
-//         (Math.random() - 0.5) * Math.PI * 2,
-//         0
-//     ))
-
-//     const matrix = new THREE.Matrix4()
-//     matrix.makeRotationFromQuaternion(quaternion)
-//     matrix.setPosition(position)
-//     mesh.setMatrixAt(i, matrix)
-// }
-
-// // Tip 29
-// renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-// Tip 31, 32, 34 and 35
-const shaderGeometry = new THREE.PlaneGeometry(10, 10, 256, 256)
-
-const shaderMaterial = new THREE.ShaderMaterial({
-    precision: 'lowp',
-    uniforms:
-    {
-        uDisplacementTexture: { value: displacementTexture }
-    },
-    defines:
-    {
-        DISPLACMENT_STRENGH: 1.5
-    },
-    vertexShader: `
-        uniform sampler2D uDisplacementTexture;
-
-        varying vec3 vColor;
-
-        void main()
-        {
-            // Position
-            vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-            float elevation = texture2D(uDisplacementTexture, uv).r;
-            modelPosition.y += max(elevation, 0.5) * DISPLACMENT_STRENGH;
-            gl_Position = projectionMatrix * viewMatrix * modelPosition;
-
-            // Color
-            float colorElevation = max(elevation, 0.25);
-            vec3 color = mix(vec3(1.0, 0.1, 0.1), vec3(0.1, 0.0, 0.5), colorElevation);
-
-            // Varying
-            vColor = color;
-        }
-    `,
-    fragmentShader: `
-        varying vec3 vColor;
-
-        void main()
-        {
-            gl_FragColor = vec4(vColor, 1.0);
-        }
-    `
-})
-
-const shaderMesh = new THREE.Mesh(shaderGeometry, shaderMaterial)
-shaderMesh.rotation.x = - Math.PI * 0.5
-scene.add(shaderMesh)
