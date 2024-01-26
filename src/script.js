@@ -7,6 +7,8 @@ import { gsap } from 'gsap'
  * Loaders
  */
 const loadingBarElement = document.querySelector('.loading-bar')
+
+let sceneReady = false
 const loadingManager = new THREE.LoadingManager(
     // Loaded
     () =>
@@ -21,6 +23,11 @@ const loadingManager = new THREE.LoadingManager(
             loadingBarElement.classList.add('ended')
             loadingBarElement.style.transform = ''
         }, 500)
+
+        window.setTimeout(() =>
+        {
+            sceneReady = true
+        }, 2000)
     },
 
     // Progress
@@ -116,17 +123,35 @@ debugObject.envMapIntensity = 2.5
  * Models
  */
 gltfLoader.load(
-    '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+    '/models/DamagedHelmet/glTF/DamagedHelmet.gltf',
     (gltf) =>
     {
-        gltf.scene.scale.set(10, 10, 10)
-        gltf.scene.position.set(0, - 4, 0)
+        gltf.scene.scale.set(2.5, 2.5, 2.5)
         gltf.scene.rotation.y = Math.PI * 0.5
         scene.add(gltf.scene)
 
         updateAllMaterials()
     }
 )
+
+/**
+ * Points of interest
+ */
+const raycaster = new THREE.Raycaster()
+const points = [
+    {
+        position: new THREE.Vector3(1.55, 0.3, - 0.6),
+        element: document.querySelector('.point-0')
+    },
+    {
+        position: new THREE.Vector3(0.5, 0.8, - 1.6),
+        element: document.querySelector('.point-1')
+    },
+    {
+        position: new THREE.Vector3(1.6, - 1.3, - 0.7),
+        element: document.querySelector('.point-2')
+    }
+]
 
 /**
  * Lights
@@ -195,6 +220,54 @@ const tick = () =>
 {
     // Update controls
     controls.update()
+
+    // Update points only when the scene is ready
+    if(sceneReady)
+    {
+        // Go through each point
+        for(const point of points)
+        {
+            // Get 2D screen position
+            const screenPosition = point.position.clone()
+            screenPosition.project(camera)
+    
+            // Set the raycaster
+            raycaster.setFromCamera(screenPosition, camera)
+            const intersects = raycaster.intersectObjects(scene.children, true)
+    
+            // No intersect found
+            if(intersects.length === 0)
+            {
+                // Show
+                point.element.classList.add('visible')
+            }
+
+            // Intersect found
+            else
+            {
+                // Get the distance of the intersection and the distance of the point
+                const intersectionDistance = intersects[0].distance
+                const pointDistance = point.position.distanceTo(camera.position)
+    
+                // Intersection is close than the point
+                if(intersectionDistance < pointDistance)
+                {
+                    // Hide
+                    point.element.classList.remove('visible')
+                }
+                // Intersection is further than the point
+                else
+                {
+                    // Show
+                    point.element.classList.add('visible')
+                }
+            }
+    
+            const translateX = screenPosition.x * sizes.width * 0.5
+            const translateY = - screenPosition.y * sizes.height * 0.5
+            point.element.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`
+        }
+    }
 
     // Render
     renderer.render(scene, camera)
