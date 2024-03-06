@@ -47,6 +47,7 @@ https://threejs-journey.com/
 - Animated Galaxy
 - Modified materials
 - Coffee smoke
+- Hologram
 
 5.  Extra
 
