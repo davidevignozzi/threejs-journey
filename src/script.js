@@ -81,11 +81,18 @@ gui.addColor(rendererParameters, 'clearColor').onChange(() => {
 /**
  * Material
  */
+const materialParameter = {};
+materialParameter.color = '#70c1ff';
+gui.addColor(materialParameter, 'color').onChange(() => {
+  material.uniforms.uColor.value.set(materialParameter.color);
+});
+
 const material = new THREE.ShaderMaterial({
   vertexShader: holographicVertexShader,
   fragmentShader: holographicFragmentShader,
   uniforms: {
-    uTime: new THREE.Uniform(0)
+    uTime: new THREE.Uniform(0),
+    uColor: new THREE.Uniform(new THREE.Color(materialParameter.color))
   },
   transparent: true,
   side: THREE.DoubleSide,
