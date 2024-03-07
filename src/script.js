@@ -151,11 +151,19 @@ const createFirework = (count, position, size, texture, radius, color) => {
   firework.position.copy(position);
   scene.add(firework);
 
+  // Destroy
+  const destroy = () => {
+    scene.remove(firework);
+    geometry.dispose();
+    material.dispose();
+  };
+
   // Animate
   gsap.to(material.uniforms.uProgress, {
     value: 1,
     duration: 3,
-    ease: 'linear'
+    ease: 'linear',
+    onComplete: destroy
   });
 };
 
