@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import GUI from 'lil-gui';
 
+import fireworksVertexShader from './shaders/fireworks/vertex.glsl';
+import fireworksFragmentShader from './shaders/fireworks/fragment.glsl';
+
 /**
  * Base
  */
@@ -88,7 +91,10 @@ const createFirework = (count, position) => {
   );
 
   // Material
-  const material = new THREE.ShaderMaterial();
+  const material = new THREE.ShaderMaterial({
+    vertexShader: fireworksVertexShader,
+    fragmentShader: fireworksFragmentShader
+  });
 
   // Points
   const firework = new THREE.Points(geometry, material);
