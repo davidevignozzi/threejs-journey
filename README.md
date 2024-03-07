@@ -48,6 +48,7 @@ https://threejs-journey.com/
 - Modified materials
 - Coffee smoke
 - Hologram
+- Fireworks
 
 5.  Extra
 
