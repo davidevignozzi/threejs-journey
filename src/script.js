@@ -82,7 +82,18 @@ renderer.setPixelRatio(sizes.pixelRatio);
 /**
  * Fireworks
  */
-const createFirework = (count, position, size) => {
+const textures = [
+  textureLoader.load('./particles/1.png'),
+  textureLoader.load('./particles/2.png'),
+  textureLoader.load('./particles/3.png'),
+  textureLoader.load('./particles/4.png'),
+  textureLoader.load('./particles/5.png'),
+  textureLoader.load('./particles/6.png'),
+  textureLoader.load('./particles/7.png'),
+  textureLoader.load('./particles/8.png')
+];
+
+const createFirework = (count, position, size, texture) => {
   // Geometry
   const positionArray = new Float32Array(count * 3);
 
@@ -101,6 +112,7 @@ const createFirework = (count, position, size) => {
   );
 
   // Material
+  texture.flipY = false;
   const material = new THREE.ShaderMaterial({
     vertexShader: fireworksVertexShader,
     fragmentShader: fireworksFragmentShader,
@@ -108,8 +120,12 @@ const createFirework = (count, position, size) => {
       uSize: new THREE.Uniform(size),
       uResolution: new THREE.Uniform(
         new THREE.Vector2(sizes.resolution.x, sizes.resolution.y)
-      )
-    }
+      ),
+      uTexture: new THREE.Uniform(texture)
+    },
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
   });
 
   // Points
@@ -121,7 +137,8 @@ const createFirework = (count, position, size) => {
 createFirework(
   100, // Count
   new THREE.Vector3(), // Position
-  0.5 // Size
+  0.5, // Size
+  textures[7] // Texture
 );
 
 /**
